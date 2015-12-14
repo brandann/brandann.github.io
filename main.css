@@ -1,0 +1,121 @@
+.nav{
+	background-color: #555555;
+	color: #000000;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 0px 10px;
+  text-transform: uppercase;
+}
+
+.nav a {
+  color: #000000;
+  font-size: 15px;
+  font-weight: bold;
+  padding: 20px 10px;
+  text-transform: uppercase;
+}
+
+.nav a:hover {
+	background: #333333;
+	 color: #555555;
+	 font-style: none;
+}
+
+.nav li {
+  display: inline;
+}
+
+.jumbotron {
+  
+  height: 500px;
+  background-repeat: no-repeat;
+  background-size: 700px;
+  background-position: right;
+  background-color: #000000;
+}
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.game img {
+	width=80%;
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+	border-radius: 5px;
+}
+
+.jumbotron .container li{
+	display: inline;
+}
+
+.jumbotron .container {
+  position: relative;
+  top:100px;
+}
+
+.jumbotron h1 {
+  color: #333333;
+  font-size: 48px;  
+  font-family: 'Shift', sans-serif;
+  font-weight: bold;
+}
+
+.jumbotron p {
+  font-size: 20px;
+  color: #333333;
+}
+
+.jumbotron a {
+  font-size: 14px;
+  color: #00b0ff;
+}
+
+.learn-more {
+  background-color: #555555;
+  color: #000000;
+}
+
+.learn-more h3 {
+  font-family: 'Shift', sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  color: #000000;
+}
+
+.learn-more a {
+  color: #000000;
+  
+}
+
+body {
+    background-color: #333333;
+	color: #bbbbbb;
+	font-size: 12px;
+}
+
+IMG.displayed {
+    display: block;
+    margin-left: auto;
+    margin-right: auto }
+	
+	hr { 
+    display: block;
+    margin-top:5em;
+    margin-bottom: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: inset;
+    border-width: 0px;
+	color: #fff000;
+}
+
+.gametitle p {
+	color: #dddddd;
+	font-size: 20px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
