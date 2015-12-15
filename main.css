@@ -1,3 +1,6 @@
+/* nav bar */
+/* ------------------------------------------------------------------------------------------- */
+
 .nav{
 	background-color: #555555;
 	color: #000000;
@@ -9,7 +12,7 @@
 }
 
 .nav a {
-  color: #000000;
+  color: #fff000;
   font-size: 15px;
   font-weight: bold;
   padding: 20px 10px;
@@ -17,8 +20,14 @@
 }
 
 .nav a:hover {
+	background: #555555;
+	 color: #000000;
+	 font-style: none;
+}
+
+a:hover {
 	background: #333333;
-	 color: #555555;
+	 color: #fff000;
 	 font-style: none;
 }
 
@@ -26,22 +35,10 @@
   display: inline;
 }
 
-.jumbotron {
-  
-  height: 500px;
-  background-repeat: no-repeat;
-  background-size: 700px;
-  background-position: right;
-  background-color: #000000;
-}
 
-img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: auto;
-    margin-bottom: auto;
-}
+
+/* game */
+/* ------------------------------------------------------------------------------------------- */
 
 .game img {
     display: block;
@@ -50,53 +47,45 @@ img {
     border-radius: 5px;
 }
 
-.jumbotron .container li{
-	display: inline;
+.game img:hover {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 5px;
+	border-style: inset;
+    border-width: 2px;
+	border-color: #fff000;
 }
 
-.jumbotron .container {
-  position: relative;
-  top:100px;
-}
-
-.jumbotron h1 {
-  color: #333333;
-  font-size: 48px;  
-  font-family: 'Shift', sans-serif;
-  font-weight: bold;
-}
-
-.jumbotron p {
-  font-size: 20px;
-  color: #333333;
-}
-
-.jumbotron a {
-  font-size: 14px;
-  color: #00b0ff;
-}
-
-.learn-more {
-  background-color: #555555;
-  color: #000000;
-}
-
-.learn-more h3 {
-  font-family: 'Shift', sans-serif;
-  font-size: 18px;
-  font-weight: bold;
-  color: #000000;
-}
-
-.learn-more a {
-  color: #000000;
-  
+.game h3 {
+	color: #fff666;
 }
 
 body {
     background-color: #222222;
 	color: #bbbbbb;
 	font-size: 12px;
+}
+
+	a {
+		color: #fff555;
+	}
+	
+	a:hover {
+		color: #ffb000;
+	}
+	
+	h1{
+		color: #fff000;
+	}
+	
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+		border-radius: 5px;
 }
 
 .main-games {
@@ -107,14 +96,16 @@ body {
     margin-right: auto;
     margin-top: auto;
     margin-bottom: auto;
+	padding: 20px 10px;
 }
 
 IMG.displayed {
     display: block;
     margin-left: auto;
-    margin-right: auto }
+    margin-right: auto;
+	}
 	
-	hr { 
+hr { 
     display: block;
     margin-top:5em;
     margin-bottom: 0.5em;
@@ -126,8 +117,20 @@ IMG.displayed {
 }
 
 .gametitle p {
-	color: #dddddd;
+	color: #fff000;
 	font-size: 20px;
 	font-weight: bold;
 	text-transform: uppercase;
+}
+
+.btn {
+    background-color: #222222;
+    border-color: #555555;
+    color: #fff000;
+}
+
+.btn:hover {
+    background-color: #fff000;
+    border-color: #555555;
+    color: #222222;
 }
