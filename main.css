@@ -15,7 +15,7 @@
   color: #fff000;
   font-size: 15px;
   font-weight: bold;
-  padding: 20px 10px;
+  padding: 0px 10px;
   text-transform: uppercase;
 }
 
@@ -35,7 +35,9 @@ a:hover {
   display: inline;
 }
 
-
+.nav img {
+  display: inline;
+}
 
 /* game */
 /* ------------------------------------------------------------------------------------------- */
@@ -55,6 +57,17 @@ a:hover {
 	border-style: inset;
     border-width: 2px;
 	border-color: #fff000;
+}
+
+.simple img{
+	display: inline;
+	    margin-left: auto;
+    margin-right: auto;
+}
+
+.simple img:hover {
+	border-width: 0px;
+	display: inline;
 }
 
 .game h3 {
@@ -97,6 +110,10 @@ img {
     margin-top: auto;
     margin-bottom: auto;
 	padding: 20px 10px;
+}
+
+.main-games h3 {
+	color: #fff666;
 }
 
 IMG.displayed {
