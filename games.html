@@ -4,20 +4,22 @@
   <head>
 	<!-- facebook -->
 	<meta property="og:title" content="Brandan Haertel Portfolio" />
-    <meta property="og:image" content="./img/profile_image.jpg" />
+    <meta property="og:image" content="http://brandann.github.io/img/profile_image.jpg" />
 	<meta property="og:description" content="Brandan Haertel Portfolio." />
-    <meta property="og:site_name" content="brandann.github.io"/>
+    <meta property="og:site_name" content="brandann.github.io/games.html"/>
 	
     <link href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/shift.css" rel="stylesheet">
     <link rel="stylesheet" href="http://s3.amazonaws.com/codecademy-content/courses/ltp/css/bootstrap.css">
-    <link rel="stylesheet" href="main.css">
+      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <!--js files for drop down menu-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  
+	<link rel="stylesheet" href="main.css">
 	
 	<!-- ICON -->
 	<link rel="shortcut icon" href="img/favicon.ico" />
   </head>
-
-  <body>
-
 
     <div class="nav">
       <div class="nav nav-pills">
@@ -25,10 +27,23 @@
 			<li><img alt="Profile Image" src="img/gif_wizard_01.gif" height=40px></li>
 			<li>Brandan Haertel</li>
         </ul>
-        <ul class="pull-right">
 		
-		  <li><a href="./index.html">Home</a></li>
-		  <li><a href="./games.html">Games</a></li>
+		
+        <ul class="pull-right">
+			<li><a href="./index.html">Home</a></li>
+		<!--Drop down code for GAMES menu-->
+			<div class="dropdown">
+				<li><a href="./games.html"	data-toggle="dropdown" >Games
+				<span class="caret"></span></button>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+					<li role="presentation"><a role="menuitem" tabindex="-1" href="./games.html"><b>[All Games]</b></a></li>
+					<li role="presentation"><a role="menuitem" tabindex="-1" href="games/ghostlight.html"> - Ghostlight</a></li>
+					<li role="presentation"><a role="menuitem" tabindex="-1" href="games/killawatt.html"> - Kill-A-Watt</a></li>
+					<li role="presentation"><a role="menuitem" tabindex="-1" href="games/nextgame.html"> - NextGame</a></li>
+					<li role="presentation"><a role="menuitem" tabindex="-1" href="games/defenseofallende.html"> - Defense of Allende</a></li>
+					<li role="presentation"><a role="menuitem" tabindex="-1" href="games/locke.html"> - Locke</a></li>
+				</ul>
+			</div>
 		  <li><a href="./projects.html">Projects</a></li>
 		  <li><a href="./misc.html">Misc</a></li>
 		  <li><a href="./nybble-studios.html">Nybble</a></li>
@@ -37,7 +52,7 @@
     </div>
     
 
-
+<br class="9pxbr" />
 <div class="main-games">
 	<div class="container">
 		<div class="game">
@@ -223,5 +238,6 @@ Defense Of Allende uses traditional tower defense tactics with a unique "retriev
 </div>
 	  
 	</div>
+	<br class="9pxbr" />
   </body>
 </html>
