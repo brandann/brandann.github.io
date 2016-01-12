@@ -151,3 +151,24 @@ hr {
     border-color: #555555;
     color: #222222;
 }
+
+/*Added css to force align nav and name, only works with image this size*/
+ul.pull-right {
+	margin-top: 8px;
+}
+
+/*Creates a 9px gap*/
+br.9pxbr {
+	margin-top: 9px;
+	}
+
+/*Keeps drop down nav item inline with the rest*/
+.dropdown {
+	display:inline-block; 
+	background-color:#555555;
+	}
+	
+	
+.dropdown ul {
+	background-color:#878585;
+}
