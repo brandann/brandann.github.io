@@ -20,8 +20,8 @@ Module.expectedDataFileDownloads++;
     } else {
       throw 'using preloaded data can only be done on a web page or in a web worker';
     }
-    var PACKAGE_NAME = '12-31.data';
-    var REMOTE_PACKAGE_BASE = '12-31.data';
+    var PACKAGE_NAME = '01-14.data';
+    var REMOTE_PACKAGE_BASE = '01-14.data';
     if (typeof Module['locateFilePackage'] === 'function' && !Module['locateFile']) {
       Module['locateFile'] = Module['locateFilePackage'];
       Module.printErr('warning: you defined Module.locateFilePackage, that has been renamed to Module.locateFile (using your locateFilePackage for now)');
@@ -30,8 +30,8 @@ Module.expectedDataFileDownloads++;
                               Module['locateFile'](REMOTE_PACKAGE_BASE) :
                               ((Module['filePackagePrefixURL'] || '') + REMOTE_PACKAGE_BASE);
   
-      var REMOTE_PACKAGE_SIZE = 52125624;
-      var PACKAGE_UUID = '61338730-09d0-4ef1-b6f7-85c5d0870f67';
+      var REMOTE_PACKAGE_SIZE = 52158528;
+      var PACKAGE_UUID = '5c2b2aba-32ea-4f17-92ec-e6e0d19c003b';
     
     function fetchRemotePackage(packageName, packageSize, callback, errback) {
       var xhr = new XMLHttpRequest();
@@ -135,18 +135,18 @@ Module['FS_createPath']('/', 'Resources', true, true);
       new DataRequest(0, 70372, 0, 0).open('GET', '/level0');
     new DataRequest(70372, 106684, 0, 0).open('GET', '/level1');
     new DataRequest(106684, 151680, 0, 0).open('GET', '/level2');
-    new DataRequest(151680, 238060, 0, 0).open('GET', '/mainData');
-    new DataRequest(238060, 240922, 0, 0).open('GET', '/methods_pointedto_by_uievents.xml');
-    new DataRequest(240922, 13069274, 0, 0).open('GET', '/resources.assets');
-    new DataRequest(13069274, 16590846, 0, 0).open('GET', '/sharedassets0.assets');
-    new DataRequest(16590846, 33143506, 0, 0).open('GET', '/sharedassets1.assets');
-    new DataRequest(33143506, 39881224, 0, 0).open('GET', '/sharedassets1.resource');
-    new DataRequest(39881224, 46242368, 0, 0).open('GET', '/sharedassets2.assets');
-    new DataRequest(46242368, 48049132, 0, 0).open('GET', '/sharedassets2.resource');
-    new DataRequest(48049132, 48093548, 0, 0).open('GET', '/sharedassets3.assets');
-    new DataRequest(48093548, 49729724, 0, 0).open('GET', '/Il2CppData/Metadata/global-metadata.dat');
-    new DataRequest(49729724, 51621740, 0, 0).open('GET', '/Resources/unity_default_resources');
-    new DataRequest(51621740, 52125624, 0, 0).open('GET', '/Resources/unity_builtin_extra');
+    new DataRequest(151680, 238676, 0, 0).open('GET', '/mainData');
+    new DataRequest(238676, 241538, 0, 0).open('GET', '/methods_pointedto_by_uievents.xml');
+    new DataRequest(241538, 13102178, 0, 0).open('GET', '/resources.assets');
+    new DataRequest(13102178, 16623750, 0, 0).open('GET', '/sharedassets0.assets');
+    new DataRequest(16623750, 33176410, 0, 0).open('GET', '/sharedassets1.assets');
+    new DataRequest(33176410, 39914128, 0, 0).open('GET', '/sharedassets1.resource');
+    new DataRequest(39914128, 46275272, 0, 0).open('GET', '/sharedassets2.assets');
+    new DataRequest(46275272, 48082036, 0, 0).open('GET', '/sharedassets2.resource');
+    new DataRequest(48082036, 48126452, 0, 0).open('GET', '/sharedassets3.assets');
+    new DataRequest(48126452, 49762628, 0, 0).open('GET', '/Il2CppData/Metadata/global-metadata.dat');
+    new DataRequest(49762628, 51654644, 0, 0).open('GET', '/Resources/unity_default_resources');
+    new DataRequest(51654644, 52158528, 0, 0).open('GET', '/Resources/unity_builtin_extra');
 
     function processPackageData(arrayBuffer) {
       Module.finishedDataFileDownloads++;
@@ -171,10 +171,10 @@ Module['FS_createPath']('/', 'Resources', true, true);
           DataRequest.prototype.requests["/Il2CppData/Metadata/global-metadata.dat"].onload();
           DataRequest.prototype.requests["/Resources/unity_default_resources"].onload();
           DataRequest.prototype.requests["/Resources/unity_builtin_extra"].onload();
-          Module['removeRunDependency']('datafile_12-31.data');
+          Module['removeRunDependency']('datafile_01-14.data');
 
     };
-    Module['addRunDependency']('datafile_12-31.data');
+    Module['addRunDependency']('datafile_01-14.data');
   
     if (!Module.preloadResults) Module.preloadResults = {};
   
