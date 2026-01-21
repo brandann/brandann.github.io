@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ЯK Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #faf8f5;
+            --text: #1a1a1a;
+            --accent: #9b7bc6;
+            --secondary: #7a5ba8;
+            --border: #2a2a2a;
+            --card: #ffffff;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+            border-bottom: 4px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+            font-size: 1.2rem;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: var(--card);
+            border: 3px solid var(--border);
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            border: 2px solid #eee;
+        }
+
+        .stat-item.total {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
+            color: white;
+            border: 3px solid var(--border);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+
+        .stat-item.total .stat-label {
+            opacity: 1;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-item.total .stat-value {
+            font-size: 3.5rem;
+            color: white;
+        }
+
+        /* Gallery */
+        .gallery-section {
+            margin-top: 3rem;
+        }
+
+        .gallery-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 3px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .gallery-item {
+            background: var(--card);
+            border: 3px solid var(--border);
+            padding: 0.75rem;
+            box-shadow: 4px 4px 0 rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 7px 7px 0 rgba(0,0,0,0.15);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            color: #999;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        /* Lightbox Modal */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border: 4px solid white;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            color: white;
+            font-size: 3rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: var(--accent);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid white;
+            transition: transform 0.2s;
+        }
+
+        .lightbox-close:hover {
+            transform: scale(1.1);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem;
+            color: #999;
+            font-size: 0.85rem;
+            border-top: 2px solid #eee;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-item.total {
+                grid-column: 1;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+
+            .gallery-item img {
+                height: 150px;
+            }
+
+            .lightbox-close {
+                top: 1rem;
+                right: 1rem;
+                width: 50px;
+                height: 50px;
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ЯK Gallery</h1>
+        <div class="subtitle">Practice Journey & Finished Work</div>
+
+        <div id="loading" class="loading">Loading gallery...</div>
+
+        <div id="content" style="display: none;">
+            <!-- Stats Display -->
+            <div class="stats">
+                <div class="stats-grid">
+                    <div class="stat-item total">
+                        <div class="stat-label">Total Hours</div>
+                        <div class="stat-value" id="total-hours">0.0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Doodles</div>
+                        <div class="stat-value" id="stat-doodles">0.0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Warmup & Practice</div>
+                        <div class="stat-value" id="stat-warmup">0.0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Finished Pieces</div>
+                        <div class="stat-value" id="stat-finished">0.0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gallery -->
+            <div class="gallery-section">
+                <div class="gallery-title">Finished Work</div>
+                <div class="gallery-grid" id="gallery">
+                    <div class="empty-state">No artwork yet. Check back soon!</div>
+                </div>
+            </div>
+
+            <div class="footer">
+                ЯK Gallery · Updated automatically
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <div class="lightbox-close">×</div>
+        <img class="lightbox-content" id="lightbox-img" src="" alt="Full size artwork">
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, doc, getDoc, collection, query, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCLnqkTS6DNTAi-Mr1w31t6-EJVWlMfQfk",
+            authDomain: "art-tracker-14ef2.firebaseapp.com",
+            projectId: "art-tracker-14ef2",
+            storageBucket: "art-tracker-14ef2.firebasestorage.app",
+            messagingSenderId: "309657162672",
+            appId: "1:309657162672:web:ef3adf3a5faf24da9efc75"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let artData = {};
+        let images = [];
+
+        // Load data from Firestore
+        async function loadData() {
+            try {
+                // Load time data
+                const docRef = doc(db, 'artTracker', 'timeData');
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    artData = docSnap.data();
+                } else {
+                    artData = { doodles: 0, warmup: 0, finished: 0 };
+                }
+
+                // Load images
+                const imagesRef = collection(db, 'artTracker', 'timeData', 'images');
+                const querySnapshot = await getDocs(query(imagesRef));
+                images = [];
+                querySnapshot.forEach((doc) => {
+                    images.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+
+                // Sort images by date (newest first)
+                images.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                updateStats();
+                renderGallery();
+                
+                // Hide loading, show content
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('content').style.display = 'block';
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('loading').textContent = 'Error loading gallery. Please try again later.';
+            }
+        }
+
+        // Update stats display
+        function updateStats() {
+            const doodlesHrs = (artData.doodles / 60).toFixed(1);
+            const warmupHrs = (artData.warmup / 60).toFixed(1);
+            const finishedHrs = (artData.finished / 60).toFixed(1);
+            const totalHrs = ((artData.doodles + artData.warmup + artData.finished) / 60).toFixed(1);
+            
+            document.getElementById('stat-doodles').textContent = doodlesHrs;
+            document.getElementById('stat-warmup').textContent = warmupHrs;
+            document.getElementById('stat-finished').textContent = finishedHrs;
+            document.getElementById('total-hours').textContent = totalHrs;
+        }
+
+        // Render gallery
+        function renderGallery() {
+            const gallery = document.getElementById('gallery');
+            
+            if (images.length === 0) {
+                gallery.innerHTML = '<div class="empty-state">No artwork yet. Check back soon!</div>';
+                return;
+            }
+            
+            gallery.innerHTML = images.map((img, index) => `
+                <div class="gallery-item" onclick="openLightbox('${img.url}')">
+                    <img src="${img.url}" alt="Finished piece ${index + 1}">
+                </div>
+            `).join('');
+        }
+
+        // Lightbox functions
+        window.openLightbox = function(imageUrl) {
+            document.getElementById('lightbox-img').src = imageUrl;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeLightbox = function() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        };
+
+        // Close lightbox on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+
+        // Initialize on load
+        loadData();
+
+        // Refresh data every 30 seconds to show updates
+        setInterval(loadData, 30000);
+    </script>
+</body>
+</html>
