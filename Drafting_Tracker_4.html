@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Drafting Tracker – Northshore Exteriors</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    :root{
+      --bg:#070b10;--bg-elevated:#131821;--bg-panel:#181d28;
+      --accent:#3b82f6;--accent-soft:rgba(59,130,246,0.12);
+      --border:#242a37;--border-subtle:#1b202b;
+      --text:#e5e7eb;--text-muted:#9ca3af;
+      --danger:#f97373;--success:#4ade80;--warning:#fbbf24;
+      --radius-lg:10px;--radius-md:8px;--radius-sm:6px;
+      --shadow-soft:0 18px 45px rgba(0,0,0,0.6);
+      --shadow-subtle:0 1px 0 rgba(255,255,255,0.02);
+      --font:system-ui,-apple-system,"Segoe UI",sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;}
+    html,body{margin:0;padding:0;height:100%;}
+    body{font-family:var(--font);background:radial-gradient(circle at top left,#0f172a 0,#020617 55%,#000 100%);color:var(--text);display:flex;flex-direction:column;min-height:100vh;}
+
+    /* Header */
+    .app-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:linear-gradient(to right,rgba(15,23,42,0.96),rgba(15,23,42,0.9));border-bottom:1px solid var(--border);box-shadow:var(--shadow-subtle);flex-shrink:0;}
+    .app-title h1{margin:0;font-size:1.25rem;letter-spacing:0.06em;text-transform:uppercase;}
+    .app-subtitle{font-size:0.78rem;color:var(--text-muted);}
+    .app-actions{display:flex;align-items:center;gap:8px;}
+
+    /* Buttons */
+    button,.file-button span{font:inherit;}
+    button{border-radius:var(--radius-md);border:1px solid rgba(148,163,184,0.4);background:rgba(15,23,42,0.9);color:var(--text);padding:7px 13px;font-size:0.85rem;display:inline-flex;align-items:center;gap:6px;cursor:pointer;transition:background 120ms,border-color 120ms,transform 80ms,box-shadow 80ms;}
+    button:hover{background:rgba(15,23,42,0.98);border-color:var(--accent);box-shadow:0 0 0 1px rgba(59,130,246,0.2);}
+    button:active{transform:translateY(1px);box-shadow:none;}
+    .btn-primary{background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.65);color:#93c5fd;}
+    .btn-primary:hover{background:rgba(59,130,246,0.25);border-color:var(--accent);color:#bfdbfe;}
+    .btn-danger{background:rgba(249,115,115,0.08);border-color:rgba(249,115,115,0.35);color:var(--danger);}
+    .btn-danger:hover{background:rgba(249,115,115,0.18);border-color:var(--danger);}
+    .btn-warning{background:rgba(251,191,36,0.08);border-color:rgba(251,191,36,0.35);color:var(--warning);}
+    .btn-warning:hover{background:rgba(251,191,36,0.18);border-color:var(--warning);}
+    .btn-success{background:rgba(74,222,128,0.08);border-color:rgba(74,222,128,0.35);color:var(--success);}
+    .btn-success:hover{background:rgba(74,222,128,0.18);border-color:var(--success);}
+    .btn-icon{padding:4px 8px;font-size:0.78rem;}
+    .file-button{position:relative;overflow:hidden;border-radius:var(--radius-md);cursor:pointer;}
+    .file-button input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+    .file-button span{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:inherit;border:1px solid rgba(148,163,184,0.4);background:rgba(15,23,42,0.9);color:var(--text);font-size:0.85rem;cursor:pointer;transition:background 120ms,border-color 120ms,box-shadow 80ms;}
+    .file-button:hover span{background:rgba(15,23,42,0.98);border-color:var(--accent);box-shadow:0 0 0 1px rgba(59,130,246,0.2);}
+
+    /* Layout */
+    .app-main{display:grid;grid-template-columns:240px minmax(0,1fr);flex:1;overflow:hidden;}
+
+    /* Sidebar */
+    .sidebar{border-right:1px solid var(--border);padding:14px;background:linear-gradient(to bottom,rgba(15,23,42,0.98),rgba(15,23,42,0.96));display:flex;flex-direction:column;gap:10px;overflow-y:auto;}
+    .sidebar h2{margin:4px 0 2px;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);}
+    .panel{background:radial-gradient(circle at top left,#111827 0,#020617 70%);border-radius:var(--radius-lg);padding:10px 12px;border:1px solid var(--border);box-shadow:var(--shadow-soft);font-size:0.84rem;}
+
+    /* Content */
+    .content{padding:14px 16px;min-width:0;display:flex;flex-direction:column;gap:10px;overflow-y:auto;}
+
+    /* Inputs */
+    input[type="search"],input[type="text"],input[type="url"],input[type="number"],input[type="date"],textarea,select{background:rgba(15,23,42,0.96);border-radius:var(--radius-md);border:1px solid rgba(51,65,85,0.9);padding:6px 9px;color:var(--text);font-size:0.86rem;font-family:var(--font);min-width:0;}
+    input[type="date"]{color-scheme:dark;}
+    input::placeholder,textarea::placeholder{color:rgba(148,163,184,0.6);}
+    input:focus,textarea:focus,select:focus{outline:none;border-color:rgba(59,130,246,0.6);box-shadow:0 0 0 2px rgba(59,130,246,0.12);}
+    select{cursor:pointer;}textarea{resize:vertical;line-height:1.5;}
+
+    /* Table */
+    .table-wrap{overflow-x:auto;border-radius:var(--radius-lg);box-shadow:var(--shadow-soft);}
+    .table{width:100%;border-collapse:collapse;font-size:0.82rem;white-space:nowrap;}
+    .table thead{background:#020617;}
+    .table th,.table td{padding:7px 10px;border-bottom:1px solid rgba(31,41,55,0.9);text-align:left;}
+    .table th{font-weight:500;color:var(--text-muted);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;user-select:none;}
+    .table th.sortable{cursor:pointer;}.table th.sortable:hover{color:var(--text);}
+    .table tbody tr{background:rgba(15,23,42,0.96);cursor:pointer;transition:background 80ms;}
+    .table tbody tr:nth-child(even){background:rgba(2,6,23,0.98);}
+    .table tbody tr:hover{background:rgba(30,64,175,0.28);}
+    .table-empty{text-align:center;padding:40px 8px;color:var(--text-muted);font-size:0.9rem;}
+
+    /* Quick view cards */
+    .quick-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;}
+    .quick-card{background:radial-gradient(circle at top left,#111827 0,#020617 80%);border:1px solid var(--border);border-radius:var(--radius-lg);padding:12px 14px;cursor:pointer;transition:border-color 120ms,box-shadow 120ms;}
+    .quick-card:hover{border-color:rgba(59,130,246,0.5);box-shadow:0 0 0 1px rgba(59,130,246,0.15);}
+    .quick-card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px;}
+    .quick-card-name{font-weight:600;font-size:0.88rem;line-height:1.3;flex:1;}
+    .quick-card-pri{font-size:0.7rem;font-weight:700;color:var(--text-muted);background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:4px;padding:1px 6px;white-space:nowrap;}
+    .quick-card-row{display:flex;align-items:center;justify-content:space-between;margin-top:5px;font-size:0.78rem;color:var(--text-muted);}
+    .quick-card-row span:last-child{color:var(--text);}
+
+    /* Form */
+    .field{margin-bottom:12px;}.field:last-child{margin-bottom:0;}
+    .field label{display:block;font-size:0.74rem;margin-bottom:4px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;}
+    .field input,.field textarea,.field select{width:100%;}
+    .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+    .field-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;}
+    .field-row .field,.field-row3 .field{margin-bottom:0;}
+    .field-error{display:block;color:var(--danger);font-size:0.75rem;margin-top:4px;}
+
+    /* View nav */
+    .view-btn{width:100%;justify-content:flex-start;background:transparent;border-radius:var(--radius-md);border-color:transparent;color:var(--text-muted);margin-bottom:3px;}
+    .view-btn--active{background:radial-gradient(circle at top left,var(--accent-soft),transparent 70%);color:var(--text);border-color:rgba(59,130,246,0.65);}
+
+    /* Tab bar */
+    .tab-bar{display:flex;gap:6px;flex-wrap:wrap;}
+    .tab-btn{padding:5px 14px;font-size:0.82rem;border-radius:var(--radius-md);border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;transition:all 120ms;}
+    .tab-btn:hover{border-color:var(--accent);color:var(--text);box-shadow:none;}
+    .tab-btn.active{background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.65);color:#93c5fd;}
+
+    /* View toggle */
+    .view-toggle{display:flex;gap:4px;}
+    .view-toggle-btn{padding:5px 12px;font-size:0.8rem;border-radius:var(--radius-md);border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;}
+    .view-toggle-btn.active{background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.65);color:#93c5fd;}
+
+    /* Filter rows */
+    .filter-row{display:flex;align-items:center;gap:7px;margin-bottom:5px;cursor:pointer;font-size:0.82rem;}
+    .filter-row input[type="checkbox"]{accent-color:var(--accent);width:13px;height:13px;cursor:pointer;flex-shrink:0;padding:0;border:none;background:none;}
+    .filter-count{margin-left:auto;font-size:0.75rem;color:var(--text-muted);}
+
+    /* Stats */
+    .stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:0.81rem;}
+    .stat-row:last-child{margin-bottom:0;}
+
+    /* Badges */
+    .badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:999px;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;}
+
+    /* Progress bar */
+    .prog-bar{display:flex;align-items:center;gap:5px;min-width:80px;}
+    .prog-track{flex:1;height:5px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;}
+    .prog-fill{height:100%;border-radius:3px;transition:width 200ms;}
+    .prog-label{font-size:0.72rem;color:var(--text-muted);white-space:nowrap;}
+
+    /* Notes */
+    .note-list{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
+    .note-row{display:flex;align-items:flex-start;gap:8px;padding:6px 8px;background:rgba(255,255,255,0.03);border:1px solid var(--border-subtle);border-radius:var(--radius-sm);}
+    .note-row-text{flex:1;font-size:0.82rem;line-height:1.4;white-space:pre-wrap;word-break:break-word;}
+    .note-row-time{font-size:0.68rem;color:var(--text-muted);white-space:nowrap;margin-top:2px;}
+    .note-del{background:transparent!important;border-color:transparent!important;color:var(--text-muted)!important;padding:0 4px!important;font-size:0.8rem;box-shadow:none!important;flex-shrink:0;}
+    .note-del:hover{color:var(--danger)!important;}
+    .note-add{display:flex;gap:6px;align-items:flex-start;}
+    .note-add textarea{flex:1;min-height:52px;font-size:0.82rem;}
+
+    /* Links */
+    .tbl-link{color:var(--accent);text-decoration:none;font-size:0.78rem;}
+    .tbl-link:hover{text-decoration:underline;}
+
+
+    /* ─── Sync status bar ─── */
+    .sync-bar{display:flex;align-items:center;gap:8px;padding:5px 18px;font-size:0.76rem;border-bottom:1px solid var(--border);background:rgba(15,23,42,0.95);flex-shrink:0;}
+    .sync-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+    .sync-dot.ok{background:var(--success);}
+    .sync-dot.busy{background:var(--warning);animation:pulse 1s infinite;}
+    .sync-dot.err{background:var(--danger);}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+    .sync-msg{color:var(--text-muted);}
+    /* ─── Password gate ─── */
+    .pw-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:2000;backdrop-filter:blur(6px);}
+    .pw-box{background:radial-gradient(circle at top left,#111827 0,#020617 70%);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px 36px;width:320px;box-shadow:var(--shadow-soft);}
+    .pw-box h2{margin:0 0 6px;font-size:1rem;}
+    .pw-box p{font-size:0.8rem;color:var(--text-muted);margin:0 0 18px;}
+    .pw-box input{width:100%;margin-bottom:10px;}
+    .pw-err{color:var(--danger);font-size:0.76rem;margin-bottom:10px;display:block;}
+    /* ─── PE Report view ─── */
+    .pe-report{display:flex;flex-direction:column;gap:24px;}
+    .pe-stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;}
+    .pe-stat-card{background:radial-gradient(circle at top left,#111827 0,#020617 80%);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;}
+    .pe-stat-card-name{font-size:0.9rem;font-weight:700;margin-bottom:10px;}
+    .pe-stat-row{display:flex;justify-content:space-between;font-size:0.78rem;margin-bottom:4px;}
+    .pe-stat-row span:first-child{color:var(--text-muted);}
+    .pe-stat-row span:last-child{font-weight:600;}
+    .chart-section{background:radial-gradient(circle at top left,#111827 0,#020617 80%);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px;}
+    .chart-title{font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:14px;font-weight:600;}
+    .hbar-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+    .hbar-label{width:80px;font-size:0.78rem;color:var(--text-muted);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}
+    .hbar-track{flex:1;height:18px;background:rgba(255,255,255,0.05);border-radius:4px;overflow:hidden;}
+    .hbar-fill{height:100%;border-radius:4px;transition:width 400ms ease;display:flex;align-items:center;padding-left:6px;}
+    .hbar-fill span{font-size:0.7rem;font-weight:700;color:rgba(255,255,255,0.9);white-space:nowrap;}
+    .hbar-zero{font-size:0.7rem;color:var(--text-muted);padding:0 6px;}
+    /* ─── Quick view grouped by PE ─── */
+    .pe-group{margin-bottom:20px;}
+    .pe-group-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+    .pe-group-name{font-size:0.82rem;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:0.08em;}
+    .pe-group-count{font-size:0.72rem;color:var(--text-muted);background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:10px;padding:1px 8px;}
+    .pe-group-line{flex:1;height:1px;background:var(--border);}
+
+    /* Overdue */
+    .overdue-tag{font-size:0.66rem;color:var(--danger);margin-left:4px;font-weight:600;text-transform:uppercase;}
+
+    /* Modal */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(3px);padding:20px;}
+    .modal-panel{background:radial-gradient(circle at top left,#111827 0,#020617 70%);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-soft),0 0 0 1px rgba(59,130,246,0.08);width:100%;max-width:640px;max-height:92vh;overflow-y:auto;animation:modal-in 140ms ease;}
+    @keyframes modal-in{from{opacity:0;transform:scale(0.97) translateY(-6px);}to{opacity:1;transform:scale(1) translateY(0);}}
+    .modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);}
+    .modal-header h2{margin:0;font-size:0.95rem;letter-spacing:0.04em;}
+    .modal-close{background:transparent;border-color:transparent;color:var(--text-muted);padding:3px 7px;}
+    .modal-close:hover{color:var(--text);border-color:var(--border);box-shadow:none;}
+    .modal-body{padding:20px;}
+    .modal-section{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid var(--border-subtle);}
+    .modal-section:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+    .modal-section-title{font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:10px;font-weight:600;}
+    .modal-footer{display:flex;justify-content:flex-end;gap:8px;padding-top:16px;margin-top:4px;border-top:1px solid var(--border);}
+
+    /* Footer */
+    .app-footer{padding:6px 18px 8px;font-size:0.78rem;color:var(--text-muted);background:rgba(15,23,42,0.96);border-top:1px solid var(--border);flex-shrink:0;}
+
+    @media(max-width:900px){
+      .app-main{grid-template-columns:1fr;}
+      .sidebar{border-right:none;border-bottom:1px solid var(--border);flex-direction:row;flex-wrap:wrap;gap:10px;}
+      .sidebar>*{flex:1 1 160px;}
+      .field-row,.field-row3{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+  const { useState, useEffect, useMemo, useRef, useCallback } = React;
+
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbxnntbkAJ_z_gckX_NUeaH21qUhlxtjLDCOqugWLEEb5Me1mITTAcYBrR48Q3W_Ws1uiw/exec';
+  const REPORT_PASSWORD = 'clown';
+  const LOCAL_KEY = 'northshore-drafting-offline'; // fallback cache
+
+  // Data now stored in Google Sheets via GAS. LOCAL_KEY is cache only.
+
+  const TEAM = [
+    'Alan','Axel','Brandan','Colton','Dave','Dennis','Eric',
+    'Grant','Jeremy','Joey','Josh','Keith','Kristi',
+    'Matt','Mike','Peter','Taylor',
+  ];
+
+  const DRAFTING_STATUS = [
+    { value:'Ready',                  color:'#60a5fa' },
+    { value:'In Progress',            color:'#3b82f6' },
+    { value:'Review – Northshore',    color:'#a78bfa' },
+    { value:'Pending Info',           color:'#fbbf24' },
+    { value:'Hold',                   color:'#9ca3af' },
+    { value:'Approved as Noted',      color:'#fb923c' },
+    { value:'NO SHOPS',               color:'#f97373' },
+    { value:'Review – Design',        color:'#e879f9' },
+    { value:'Approved',               color:'#4ade80' },
+    { value:'Review - Markups Ready', color:'#38bdf8' },
+    { value:'Finished',               color:'#86efac' },
+  ];
+
+  const DIVISIONS = [
+    { value:'NorthClad',        color:'#60a5fa' },
+    { value:'Northshore',       color:'#4ade80' },
+    { value:'Northshore Hawaii',color:'#fb923c' },
+  ];
+
+  const STATUS_ORDER = {};
+  DRAFTING_STATUS.forEach((s,i)=>{ STATUS_ORDER[s.value]=i; });
+
+  const SORT_OPTIONS = [
+    {value:'pri',       label:'PRI'},
+    {value:'pe', label:'Project Engineer'},
+    {value:'dueDate',   label:'Due Date'},
+    {value:'status',    label:'Drafting Status'},
+    {value:'name',      label:'Project Name'},
+    {value:'jobNumber', label:'Job Number'},
+  ];
+
+  const DEFAULT_FORM = {
+    pri:'',name:'',jobNumber:'',division:'',projectType:'',
+    pe:'',pm:'',estimator:'',
+    draftingStatus:'Ready',dueDate:'',
+    woLink:'',plansLink:'',
+    price:'',
+    detailsTotal:0,detailsDone:0,
+    elevationsTotal:0,elevationsDone:0,
+    notes:[],
+  };
+
+  /* helpers */
+  function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2); }
+
+  // Load from localStorage cache (used on first render before GAS responds)
+  function loadCache(){ try{ const r=localStorage.getItem(LOCAL_KEY); return r?JSON.parse(r):[]; }catch{ return []; } }
+  function saveCache(d){ try{ localStorage.setItem(LOCAL_KEY,JSON.stringify(d)); }catch{} }
+
+  // JSONP load — works from file:// (no CORS restriction on script tags)
+  function gasGet(){
+    return new Promise((resolve, reject) => {
+      const cbName = '__gasCb_' + Date.now();
+      const script = document.createElement('script');
+      window[cbName] = (json) => {
+        delete window[cbName];
+        if(script.parentNode) script.parentNode.removeChild(script);
+        if(!json.ok) reject(new Error('GAS read failed'));
+        else resolve(json.data || []);
+      };
+      script.onerror = () => {
+        delete window[cbName];
+        if(script.parentNode) script.parentNode.removeChild(script);
+        reject(new Error('JSONP script load failed'));
+      };
+      script.src = GAS_URL + '?callback=' + cbName + '&t=' + Date.now();
+      document.head.appendChild(script);
+    });
+  }
+
+  // Hidden iframe form POST — works from file:// (forms bypass CORS)
+  function gasSet(data){
+    return new Promise((resolve) => {
+      const frameName = 'gasFrame_' + Date.now();
+      const iframe = document.createElement('iframe');
+      iframe.name = frameName;
+      iframe.style.cssText = 'position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;';
+      document.body.appendChild(iframe);
+
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = GAS_URL;
+      form.target = frameName;
+      form.style.display = 'none';
+
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'data';
+      input.value = JSON.stringify(data);
+      form.appendChild(input);
+      document.body.appendChild(form);
+
+      const cleanup = () => {
+        try { document.body.removeChild(form); } catch(e){}
+        try { document.body.removeChild(iframe); } catch(e){}
+        resolve();
+      };
+
+      iframe.onload = cleanup;
+      setTimeout(cleanup, 8000); // fallback timeout
+      form.submit();
+    });
+  }
+  function fmtDate(s){ if(!s)return'—'; const[y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+  function isOverdue(d,s){ if(!d||s==='Finished'||s==='Approved'||s==='NO SHOPS') return false; const t=new Date();t.setHours(0,0,0,0);const[y,m,dd]=d.split('-').map(Number);return new Date(y,m-1,dd)<t; }
+  function colorOf(val,arr){ return arr.find(o=>o.value===val)?.color??'#9ca3af'; }
+  function calcPct(p){ const tot=(+p.detailsTotal||0)+(+p.elevationsTotal||0); if(!tot)return 0; const done=(+p.detailsDone||0)+(+p.elevationsDone||0); return Math.min(100,Math.round((done/tot)*100)); }
+  function fmtNoteTime(iso){ try{ return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}); }catch{return'';} }
+
+  /* Badge */
+  function Badge({val,arr}){ const c=colorOf(val,arr); return <span className="badge" style={{background:c+'1a',color:c,border:`1px solid ${c}44`}}>{val}</span>; }
+
+  /* Sort arrow */
+  function SA({f,sortBy,sortDir}){ if(sortBy!==f)return <span style={{color:'#334155',marginLeft:4,fontSize:'0.7rem'}}>⇅</span>; return <span style={{color:'var(--accent)',marginLeft:4,fontSize:'0.7rem'}}>{sortDir==='asc'?'↑':'↓'}</span>; }
+
+  /* Progress bar */
+  function ProgBar({project}){
+    const pct=calcPct(project);
+    const fill=pct===100?'var(--success)':pct>50?'var(--accent)':'#f59e0b';
+    const tot=(+project.detailsTotal||0)+(+project.elevationsTotal||0);
+    if(!tot)return <span style={{color:'var(--text-muted)',fontSize:'0.75rem'}}>—</span>;
+    return(
+      <div className="prog-bar">
+        <div className="prog-track"><div className="prog-fill" style={{width:`${pct}%`,background:fill}}/></div>
+        <span className="prog-label">{pct}%</span>
+      </div>
+    );
+  }
+
+  /* Notes editor */
+  function NotesEditor({notes,onChange}){
+    const [text,setText]=useState('');
+    const ref=useRef(null);
+    function add(){ const t=text.trim();if(!t)return; onChange([...notes,{id:uid(),text:t,createdAt:new Date().toISOString()}]); setText(''); ref.current?.focus(); }
+    function remove(id){ onChange(notes.filter(n=>n.id!==id)); }
+    function onKey(e){ if(e.key==='Enter'&&e.ctrlKey){e.preventDefault();add();} }
+    return(
+      <div>
+        <div className="note-list">
+          {notes.length===0&&<div style={{color:'var(--text-muted)',fontSize:'0.8rem',padding:'4px 0'}}>No notes yet.</div>}
+          {[...notes].reverse().map(n=>(
+            <div key={n.id} className="note-row">
+              <div style={{flex:1}}>
+                <div className="note-row-text">{n.text}</div>
+                <div className="note-row-time">{fmtNoteTime(n.createdAt)}</div>
+              </div>
+              <button className="note-del btn-icon" onClick={()=>remove(n.id)}>✕</button>
+            </div>
+          ))}
+        </div>
+        <div className="note-add">
+          <textarea ref={ref} value={text} onChange={e=>setText(e.target.value)} onKeyDown={onKey} placeholder="Add note… (Ctrl+Enter to save)" rows={2}/>
+          <button className="btn-primary btn-icon" onClick={add} style={{alignSelf:'flex-end',whiteSpace:'nowrap'}}>+ Add</button>
+        </div>
+      </div>
+    );
+  }
+
+  /* Project Modal */
+  function ProjectModal({project,onSave,onClose}){
+    const isEdit=Boolean(project);
+    const [form,setForm]=useState(isEdit?{...DEFAULT_FORM,...project}:{...DEFAULT_FORM,notes:[]});
+    const [errors,setErrors]=useState({});
+    const nameRef=useRef(null);
+    useEffect(()=>{
+      nameRef.current?.focus();
+      function ek(e){if(e.key==='Escape')onClose();}
+      document.addEventListener('keydown',ek);
+      return()=>document.removeEventListener('keydown',ek);
+    },[]);
+    function set(k,v){setForm(f=>({...f,[k]:v}));if(errors[k])setErrors(e=>({...e,[k]:null}));}
+    function num(k,v){set(k,Math.max(0,parseInt(v)||0));}
+    function submit(e){
+      e.preventDefault();
+      const errs={};if(!form.name.trim())errs.name='Required';
+      if(Object.keys(errs).length){setErrors(errs);return;}
+      onSave({...form,name:form.name.trim()});
+    }
+    const mo=['',...TEAM];
+    return(
+      <div className="modal-overlay" onMouseDown={e=>{if(e.target===e.currentTarget)onClose();}}>
+        <div className="modal-panel">
+          <div className="modal-header">
+            <h2>{isEdit?'Edit Project':'Add Project'}</h2>
+            <button className="modal-close" onClick={onClose}>✕</button>
+          </div>
+          <form onSubmit={submit} className="modal-body">
+
+            {/* Identity */}
+            <div className="modal-section">
+              <div className="modal-section-title">Project Info</div>
+              <div className="field-row">
+                <div className="field">
+                  <label>PRI</label>
+                  <input type="number" min="0" value={form.pri} onChange={e=>set('pri',e.target.value)} placeholder="e.g. 1"/>
+                </div>
+                <div className="field">
+                  <label>Job Number</label>
+                  <input type="text" value={form.jobNumber} onChange={e=>set('jobNumber',e.target.value)} placeholder="Job #"/>
+                </div>
+              </div>
+              <div className="field">
+                <label>Project Name *</label>
+                <input ref={nameRef} type="text" value={form.name} onChange={e=>set('name',e.target.value)} placeholder="Project name"/>
+                {errors.name&&<span className="field-error">{errors.name}</span>}
+              </div>
+              <div className="field-row">
+                <div className="field">
+                  <label>Division</label>
+                  <select value={form.division} onChange={e=>set('division',e.target.value)}>
+                    <option value="">— Select —</option>
+                    {DIVISIONS.map(d=><option key={d.value} value={d.value}>{d.value}</option>)}
+                  </select>
+                </div>
+                <div className="field">
+                  <label>Project Type</label>
+                  <input type="text" value={form.projectType} onChange={e=>set('projectType',e.target.value)} placeholder="e.g. Panel, Cladding…"/>
+                </div>
+              </div>
+              <div className="field">
+                <label>Price</label>
+                <input type="text" value={form.price} onChange={e=>set('price',e.target.value)} placeholder="$0.00"/>
+              </div>
+            </div>
+
+            {/* People */}
+            <div className="modal-section">
+              <div className="modal-section-title">Team</div>
+              <div className="field-row">
+                <div className="field"><label>PE (Project Engineer)</label>
+                  <select value={form.pe} onChange={e=>set('pe',e.target.value)}>{mo.map(n=><option key={n} value={n}>{n||'— Unassigned —'}</option>)}</select></div>
+                <div className="field"><label>PM (Project Manager)</label>
+                  <select value={form.pm} onChange={e=>set('pm',e.target.value)}>{mo.map(n=><option key={n} value={n}>{n||'— Unassigned —'}</option>)}</select></div>
+              </div>
+              <div className="field-row">
+                <div className="field"><label>Estimator</label>
+                  <select value={form.estimator} onChange={e=>set('estimator',e.target.value)}>{mo.map(n=><option key={n} value={n}>{n||'— Unassigned —'}</option>)}</select></div>
+
+              </div>
+            </div>
+
+            {/* Status + Date */}
+            <div className="modal-section">
+              <div className="modal-section-title">Drafting</div>
+              <div className="field-row">
+                <div className="field"><label>Drafting Status</label>
+                  <select value={form.draftingStatus} onChange={e=>set('draftingStatus',e.target.value)}>
+                    {DRAFTING_STATUS.map(s=><option key={s.value} value={s.value}>{s.value}</option>)}
+                  </select></div>
+                <div className="field"><label>Due Date</label>
+                  <input type="date" value={form.dueDate} onChange={e=>set('dueDate',e.target.value)}/></div>
+              </div>
+              {/* Details */}
+              <div style={{marginBottom:10}}>
+                <div style={{fontSize:'0.74rem',color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:6}}>Details</div>
+                <div className="field-row">
+                  <div className="field"><label>Total Details</label>
+                    <input type="number" min="0" value={form.detailsTotal} onChange={e=>num('detailsTotal',e.target.value)}/></div>
+                  <div className="field"><label>Details Finished</label>
+                    <input type="number" min="0" value={form.detailsDone} onChange={e=>num('detailsDone',e.target.value)}/></div>
+                </div>
+              </div>
+              {/* Elevations */}
+              <div>
+                <div style={{fontSize:'0.74rem',color:'var(--text-muted)',textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:6}}>Elevations</div>
+                <div className="field-row">
+                  <div className="field"><label>Total Elevations</label>
+                    <input type="number" min="0" value={form.elevationsTotal} onChange={e=>num('elevationsTotal',e.target.value)}/></div>
+                  <div className="field"><label>Elevations Finished</label>
+                    <input type="number" min="0" value={form.elevationsDone} onChange={e=>num('elevationsDone',e.target.value)}/></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Links */}
+            <div className="modal-section">
+              <div className="modal-section-title">Links</div>
+              <div className="field"><label>WO Link (Work Order)</label>
+                <input type="url" value={form.woLink} onChange={e=>set('woLink',e.target.value)} placeholder="https://…"/></div>
+              <div className="field"><label>Plans Link</label>
+                <input type="url" value={form.plansLink} onChange={e=>set('plansLink',e.target.value)} placeholder="https://…"/></div>
+            </div>
+
+            {/* Notes */}
+            <div className="modal-section">
+              <div className="modal-section-title">Notes</div>
+              <NotesEditor notes={form.notes} onChange={v=>set('notes',v)}/>
+            </div>
+
+            <div className="modal-footer">
+              <button type="button" onClick={onClose}>Cancel</button>
+              <button type="submit" className="btn-primary">{isEdit?'Save Changes':'Add Project'}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  /* Confirm dialog */
+  function ConfirmDialog({title,message,confirmLabel,confirmClass,onConfirm,onCancel}){
+    useEffect(()=>{ function ek(e){if(e.key==='Escape')onCancel();} document.addEventListener('keydown',ek); return()=>document.removeEventListener('keydown',ek); },[]);
+    return(
+      <div className="modal-overlay" onMouseDown={e=>{if(e.target===e.currentTarget)onCancel();}}>
+        <div className="modal-panel" style={{maxWidth:400}}>
+          <div className="modal-header"><h2>{title}</h2><button className="modal-close" onClick={onCancel}>✕</button></div>
+          <div className="modal-body">
+            <p style={{color:'var(--text)',marginBottom:20}}>{message}</p>
+            <div className="modal-footer">
+              <button onClick={onCancel}>Cancel</button>
+              <button className={confirmClass} onClick={onConfirm}>{confirmLabel}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* App */
+  function App(){
+    const [projects,setProjects]   = useState(loadCache);
+    const [tab,setTab]             = useState('active');
+    const [view,setView]           = useState('detailed');
+    const [modal,setModal]         = useState(null);
+    const [confirm,setConfirm]     = useState(null);
+    const [search,setSearch]       = useState('');
+    const [fStatus,setFStatus]     = useState([]);
+    const [fDiv,setFDiv]           = useState([]);
+    const [sortBy,setSortBy]       = useState('pri');
+    const [sortDir,setSortDir]     = useState('asc');
+    const [syncStatus,setSyncStatus] = useState('loading'); // 'loading'|'ok'|'saving'|'error'
+    const [syncMsg,setSyncMsg]       = useState('Connecting to Google Sheets…');
+    const [reportUnlocked,setReportUnlocked] = useState(false);
+    const [pwInput,setPwInput]       = useState('');
+    const [pwErr,setPwErr]           = useState(false);
+    const saveTimer = useRef(null);
+
+    // Load from GAS on mount
+    useEffect(()=>{
+      setSyncStatus('loading');
+      setSyncMsg('Loading from Google Sheets…');
+      gasGet()
+        .then(data=>{
+          setProjects(data);
+          saveCache(data);
+          setSyncStatus('ok');
+          setSyncMsg('Synced with Google Sheets');
+        })
+        .catch(()=>{
+          setSyncStatus('error');
+          setSyncMsg('Could not reach Google Sheets — showing cached data');
+        });
+    },[]);
+
+    // Debounced save to GAS whenever projects change (skip on first mount)
+    const isFirstRender = useRef(true);
+    useEffect(()=>{
+      if(isFirstRender.current){ isFirstRender.current=false; return; }
+      saveCache(projects);
+      setSyncStatus('saving');
+      setSyncMsg('Saving…');
+      clearTimeout(saveTimer.current);
+      saveTimer.current = setTimeout(()=>{
+        gasSet(projects)
+          .then(()=>{
+            setSyncStatus('ok');
+            const t = new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+            setSyncMsg('Saved to Google Sheets at ' + t);
+          })
+          .catch(err=>{
+            console.error('GAS save error:', err);
+            setSyncStatus('error');
+            setSyncMsg('Save failed — check console. Data cached locally.');
+          });
+      }, 800);
+    },[projects]);
+
+    function handleSave(fd){
+      if(modal.mode==='add'){
+        setProjects(p=>[...p,{id:uid(),...fd,archived:false,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()}]);
+      } else {
+        setProjects(p=>p.map(x=>x.id===modal.project.id?{...x,...fd,updatedAt:new Date().toISOString()}:x));
+      }
+      setModal(null);
+    }
+    function doArchive(p){ setProjects(ps=>ps.map(x=>x.id===p.id?{...x,archived:true,updatedAt:new Date().toISOString()}:x)); setConfirm(null); }
+    function doRestore(p){ setProjects(ps=>ps.map(x=>x.id===p.id?{...x,archived:false,updatedAt:new Date().toISOString()}:x)); }
+    function doDelete(p){  setProjects(ps=>ps.filter(x=>x.id!==p.id)); setConfirm(null); }
+
+    function handleSort(f){ if(sortBy===f) setSortDir(d=>d==='asc'?'desc':'asc'); else{setSortBy(f);setSortDir('asc');} }
+    function toggleF(arr,set,v){ set(p=>p.includes(v)?p.filter(x=>x!==v):[...p,v]); }
+
+    function handleExport(){ const b=new Blob([JSON.stringify(projects,null,2)],{type:'application/json'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u;a.download=`drafting-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(u); }
+    function handleImport(e){ const f=e.target.files[0];if(!f)return; const r=new FileReader(); r.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(Array.isArray(d)){setProjects(d);}else alert('Invalid format.');}catch{alert('Could not parse file.');}}; r.readAsText(f);e.target.value=''; }
+
+    function handlePwSubmit(e){ e.preventDefault(); if(pwInput===REPORT_PASSWORD){setReportUnlocked(true);setPwErr(false);setPwInput('');}else{setPwErr(true);setPwInput('');} }
+
+    const active   = useMemo(()=>projects.filter(p=>!p.archived),[projects]);
+    const archived = useMemo(()=>projects.filter(p=>p.archived),[projects]);
+    const base     = tab==='active'?active:archived;
+
+    const displayed = useMemo(()=>{
+      let list=[...base];
+      if(search.trim()){ const q=search.toLowerCase(); list=list.filter(p=>[p.name,p.jobNumber,p.pe,p.pm,p.estimator,p.division,p.projectType].some(v=>(v??'').toLowerCase().includes(q))); }
+      if(fStatus.length) list=list.filter(p=>fStatus.includes(p.draftingStatus));
+      if(fDiv.length)    list=list.filter(p=>fDiv.includes(p.division));
+      list.sort((a,b)=>{
+        let c=0;
+        switch(sortBy){
+          case 'pri':       const pa=parseInt(a.pri)||9999,pb=parseInt(b.pri)||9999; c=pa-pb; break;
+          case 'name':      c=(a.name||'').localeCompare(b.name||''); break;
+          case 'jobNumber': c=(a.jobNumber||'').localeCompare(b.jobNumber||''); break;
+          case 'dueDate':   if(!a.dueDate&&!b.dueDate)c=0;else if(!a.dueDate)c=1;else if(!b.dueDate)c=-1;else c=a.dueDate.localeCompare(b.dueDate); break;
+          case 'status':    c=(STATUS_ORDER[a.draftingStatus]??99)-(STATUS_ORDER[b.draftingStatus]??99); break;
+          default:          c=(a.pe||'').localeCompare(b.pe||''); break;
+        }
+        return sortDir==='asc'?c:-c;
+      });
+      return list;
+    },[base,search,fStatus,fDiv,sortBy,sortDir]);
+
+    const stats = useMemo(()=>{
+      const out={total:active.length};
+      DRAFTING_STATUS.forEach(s=>{out[s.value]=0;});
+      active.forEach(p=>{out[p.draftingStatus]=(out[p.draftingStatus]||0)+1;});
+      return out;
+    },[active]);
+
+    const hasF=fStatus.length||fDiv.length||search.trim();
+
+    /* Detailed table */
+    function DetailedTable(){
+      return(
+        <div className="table-wrap">
+          <table className="table">
+            <thead>
+              <tr>
+                <th className="sortable" onClick={()=>handleSort('pri')}>PRI <SA f="pri" sortBy={sortBy} sortDir={sortDir}/></th>
+                <th className="sortable" onClick={()=>handleSort('name')}>Project <SA f="name" sortBy={sortBy} sortDir={sortDir}/></th>
+                <th className="sortable" onClick={()=>handleSort('jobNumber')}>Job # <SA f="jobNumber" sortBy={sortBy} sortDir={sortDir}/></th>
+                <th>Division</th>
+                <th>Type</th>
+                <th>PE</th>
+                <th>PM</th>
+                <th className="sortable" onClick={()=>handleSort('status')}>Status <SA f="status" sortBy={sortBy} sortDir={sortDir}/></th>
+                <th className="sortable" onClick={()=>handleSort('dueDate')}>Due <SA f="dueDate" sortBy={sortBy} sortDir={sortDir}/></th>
+                <th>Progress</th>
+                <th>Details</th>
+                <th>Elevs</th>
+                <th>WO</th>
+                <th>Plans</th>
+                <th>Notes</th>
+                <th style={{textAlign:'right'}}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {displayed.length===0?(
+                <tr><td colSpan={17} className="table-empty">{base.length===0?(tab==='active'?'No active projects — click "+ Add Project" to get started.':'No archived projects.'):'No projects match the filters.'}</td></tr>
+              ):(
+                displayed.map(p=>{
+                  const ov=isOverdue(p.dueDate,p.draftingStatus);
+                  const pct=calcPct(p);
+                  const fill=pct===100?'var(--success)':pct>50?'var(--accent)':'#f59e0b';
+                  const tot=(+p.detailsTotal||0)+(+p.elevationsTotal||0);
+                  return(
+                    <tr key={p.id} onClick={()=>setModal({mode:'edit',project:p})} title="Click to edit">
+                      <td style={{color:'var(--text-muted)',fontWeight:600,textAlign:'center'}}>{p.pri||'—'}</td>
+                      <td style={{maxWidth:160}}>
+                        <span style={{display:'block',overflow:'hidden',textOverflow:'ellipsis',fontWeight:500}}>{p.name}</span>
+                        {p.price&&<span style={{fontSize:'0.72rem',color:'var(--text-muted)'}}>{p.price}</span>}
+                      </td>
+                      <td style={{color:'var(--text-muted)',fontSize:'0.78rem'}}>{p.jobNumber||'—'}</td>
+                      <td>{p.division?<Badge val={p.division} arr={DIVISIONS}/>:<span style={{color:'var(--text-muted)'}}>—</span>}</td>
+                      <td style={{fontSize:'0.78rem',color:'var(--text-muted)',maxWidth:80,overflow:'hidden',textOverflow:'ellipsis'}}>{p.projectType||'—'}</td>
+                      <td style={{fontSize:'0.8rem'}}>{p.pe||'—'}</td>
+                      <td style={{fontSize:'0.8rem'}}>{p.pm||'—'}</td>
+                      <td><Badge val={p.draftingStatus} arr={DRAFTING_STATUS}/></td>
+                      <td style={{whiteSpace:'nowrap'}}>
+                        <span style={{color:ov?'var(--danger)':'inherit'}}>{fmtDate(p.dueDate)}</span>
+                        {ov&&<span className="overdue-tag">overdue</span>}
+                      </td>
+                      <td>
+                        {tot?(<div className="prog-bar"><div className="prog-track"><div className="prog-fill" style={{width:`${pct}%`,background:fill}}/></div><span className="prog-label">{pct}%</span></div>):<span style={{color:'var(--text-muted)',fontSize:'0.75rem'}}>—</span>}
+                      </td>
+                      <td style={{fontSize:'0.78rem',textAlign:'center'}}>{(+p.detailsTotal||0)?`${+p.detailsDone||0}/${+p.detailsTotal}`:'—'}</td>
+                      <td style={{fontSize:'0.78rem',textAlign:'center'}}>{(+p.elevationsTotal||0)?`${+p.elevationsDone||0}/${+p.elevationsTotal}`:'—'}</td>
+                      <td onClick={e=>e.stopPropagation()}>{p.woLink?<a href={p.woLink} target="_blank" rel="noopener noreferrer" className="tbl-link">WO ↗</a>:<span style={{color:'var(--text-muted)',fontSize:'0.75rem'}}>—</span>}</td>
+                      <td onClick={e=>e.stopPropagation()}>{p.plansLink?<a href={p.plansLink} target="_blank" rel="noopener noreferrer" className="tbl-link">Plans ↗</a>:<span style={{color:'var(--text-muted)',fontSize:'0.75rem'}}>—</span>}</td>
+                      <td style={{fontSize:'0.75rem',color:'var(--text-muted)',textAlign:'center'}}>{p.notes?.length?<span style={{color:'var(--accent)'}}>{p.notes.length}</span>:'—'}</td>
+                      <td style={{textAlign:'right',whiteSpace:'nowrap'}} onClick={e=>e.stopPropagation()}>
+                        <button className="btn-icon" onClick={()=>setModal({mode:'edit',project:p})}>Edit</button>
+                        {tab==='active'
+                          ?<button className="btn-icon btn-warning" style={{marginLeft:4}} onClick={()=>setConfirm({type:'archive',project:p})}>Archive</button>
+                          :<button className="btn-icon btn-success" style={{marginLeft:4}} onClick={()=>doRestore(p)}>Restore</button>}
+                        <button className="btn-icon btn-danger" style={{marginLeft:4}} onClick={()=>setConfirm({type:'delete',project:p})}>Delete</button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      );
+    }
+
+    // QuickView defined above with PE grouping
+
+
+    /* Quick card component */
+    function QuickCard({p}){
+      const ov=isOverdue(p.dueDate,p.draftingStatus);
+      const pct=calcPct(p);
+      const fill=pct===100?'var(--success)':pct>50?'var(--accent)':'#f59e0b';
+      const tot=(+p.detailsTotal||0)+(+p.elevationsTotal||0);
+      return(
+        <div className="quick-card" onClick={()=>setModal({mode:'edit',project:p})}>
+          <div className="quick-card-header">
+            <span className="quick-card-name">{p.name}</span>
+            {p.pri&&<span className="quick-card-pri">#{p.pri}</span>}
+          </div>
+          <div style={{marginBottom:8}}>
+            <Badge val={p.draftingStatus} arr={DRAFTING_STATUS}/>
+            {p.division&&<span style={{marginLeft:6}}><Badge val={p.division} arr={DIVISIONS}/></span>}
+          </div>
+          <div className="quick-card-row"><span>PE</span><span>{p.pe||'—'}</span></div>
+          <div className="quick-card-row">
+            <span>Due</span>
+            <span style={{color:ov?'var(--danger)':'var(--text)'}}>{fmtDate(p.dueDate)}{ov&&<span className="overdue-tag">!</span>}</span>
+          </div>
+          {tot>0&&(
+            <div style={{marginTop:8}}>
+              <div style={{display:'flex',justifyContent:'space-between',fontSize:'0.72rem',color:'var(--text-muted)',marginBottom:3}}>
+                <span>Progress</span><span>{pct}%</span>
+              </div>
+              <div className="prog-track" style={{height:6}}>
+                <div className="prog-fill" style={{width:`${pct}%`,background:fill,height:'100%'}}/>
+              </div>
+              <div style={{display:'flex',justifyContent:'space-between',fontSize:'0.7rem',color:'var(--text-muted)',marginTop:3}}>
+                <span>Details {+p.detailsDone||0}/{+p.detailsTotal||0}</span>
+                <span>Elevs {+p.elevationsDone||0}/{+p.elevationsTotal||0}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    /* Quick view — grouped by PE */
+    function QuickView(){
+      if(displayed.length===0) return <div style={{textAlign:'center',padding:'40px',color:'var(--text-muted)'}}>{base.length===0?(tab==='active'?'No active projects.':'No archived projects.'):'No projects match the filters.'}</div>;
+      const groups=[];
+      const seen={};
+      displayed.forEach(p=>{
+        const key=p.pe||'Unassigned';
+        if(!seen[key]){seen[key]=true;groups.push({pe:key,projects:[]});}
+        groups.find(g=>g.pe===key).projects.push(p);
+      });
+      return(
+        <div>
+          {groups.map(g=>(
+            <div key={g.pe} className="pe-group">
+              <div className="pe-group-header">
+                <span className="pe-group-name">{g.pe}</span>
+                <span className="pe-group-count">{g.projects.length} project{g.projects.length!==1?'s':''}</span>
+                <div className="pe-group-line"/>
+              </div>
+              <div className="quick-grid">
+                {g.projects.map(p=><QuickCard key={p.id} p={p}/>)}
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    /* PE Report — password gated */
+    function PEReport(){
+      if(!reportUnlocked) return(
+        <div className="pw-overlay">
+          <div className="pw-box">
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}>
+              <h2 style={{margin:0}}>PE Report</h2>
+              <button
+                onClick={()=>setView('detailed')}
+                style={{background:'transparent',border:'none',color:'var(--text-muted)',fontSize:'1.1rem',cursor:'pointer',padding:'2px 6px',lineHeight:1}}
+                title="Back to Detailed view"
+              >✕</button>
+            </div>
+            <p>This view is restricted. Enter the password to continue.</p>
+            <form onSubmit={handlePwSubmit}>
+              <input type="password" value={pwInput} onChange={e=>{setPwInput(e.target.value);setPwErr(false);}} placeholder="Password" autoFocus/>
+              {pwErr&&<span className="pw-err">Incorrect password.</span>}
+              <button type="submit" className="btn-primary" style={{width:'100%',marginTop:4}}>Unlock</button>
+            </form>
+            <button onClick={()=>setView('detailed')} style={{width:'100%',marginTop:8,fontSize:'0.8rem',color:'var(--text-muted)',background:'transparent',border:'1px solid var(--border)',borderRadius:'var(--radius-md)',padding:'6px',cursor:'pointer'}}>
+              ← Back
+            </button>
+          </div>
+        </div>
+      );
+
+      const peNames=[...new Set(active.map(p=>p.pe||'Unassigned'))].sort();
+      function parsePrice(s){ if(!s)return 0; const n=parseFloat(s.replace(/[^0-9.]/g,'')); return isNaN(n)?0:n; }
+      const PALETTE=['#3b82f6','#8b5cf6','#10b981','#f59e0b','#ef4444','#06b6d4','#ec4899','#84cc16','#f97316','#6366f1','#14b8a6','#e11d48','#7c3aed','#0ea5e9','#65a30d','#d97706'];
+      const peColor=pe=>PALETTE[peNames.indexOf(pe)%PALETTE.length];
+
+      const peData=peNames.map(pe=>{
+        const projs=active.filter(p=>(p.pe||'Unassigned')===pe);
+        const finished=projs.filter(p=>p.draftingStatus==='Finished'||p.draftingStatus==='Approved');
+        const totalDetails=projs.reduce((a,p)=>a+(+p.detailsTotal||0),0);
+        const doneDetails=projs.reduce((a,p)=>a+(+p.detailsDone||0),0);
+        const totalElevs=projs.reduce((a,p)=>a+(+p.elevationsTotal||0),0);
+        const doneElevs=projs.reduce((a,p)=>a+(+p.elevationsDone||0),0);
+        const totalValue=projs.reduce((a,p)=>a+parsePrice(p.price),0);
+        const overdue=projs.filter(p=>isOverdue(p.dueDate,p.draftingStatus)).length;
+        const statusBreak={};
+        projs.forEach(p=>{statusBreak[p.draftingStatus]=(statusBreak[p.draftingStatus]||0)+1;});
+        return{pe,count:projs.length,finished:finished.length,totalDetails,doneDetails,totalElevs,doneElevs,totalValue,overdue,statusBreak,projs};
+      }).filter(d=>d.count>0);
+
+      if(peData.length===0) return <div style={{textAlign:'center',padding:'60px',color:'var(--text-muted)'}}>No active projects to report on.</div>;
+
+      function fmtDollar(v){ if(!v)return'$0'; if(v>=1000000)return`$${(v/1000000).toFixed(1)}M`; if(v>=1000)return`$${(v/1000).toFixed(0)}k`; return`$${v.toFixed(0)}`; }
+
+      function HBarChart({title,data,fmt}){
+        const max=Math.max(...data.map(d=>d.val),1);
+        return(
+          <div className="chart-section">
+            <div className="chart-title">{title}</div>
+            {data.map(d=>(
+              <div key={d.label} className="hbar-row">
+                <span className="hbar-label" title={d.label}>{d.label}</span>
+                <div className="hbar-track">
+                  {d.val>0
+                    ?<div className="hbar-fill" style={{width:`${Math.max(4,(d.val/max)*100)}%`,background:d.color}}>
+                       <span>{fmt?fmt(d.val):d.val}</span>
+                     </div>
+                    :<span className="hbar-zero">0</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      }
+
+      const hasValue=peData.some(d=>d.totalValue>0);
+
+      return(
+        <div className="pe-report">
+          <div style={{display:'flex',justifyContent:'flex-end'}}>
+            <button className="btn-icon btn-warning" onClick={()=>setReportUnlocked(false)}>🔒 Lock Report</button>
+          </div>
+          {/* Stat cards */}
+          <div>
+            <div style={{fontSize:'0.72rem',textTransform:'uppercase',letterSpacing:'0.1em',color:'var(--text-muted)',marginBottom:10,fontWeight:600}}>PE Summary</div>
+            <div className="pe-stat-grid">
+              {peData.map(d=>{
+                const detPct=d.totalDetails?Math.round((d.doneDetails/d.totalDetails)*100):0;
+                const elvPct=d.totalElevs?Math.round((d.doneElevs/d.totalElevs)*100):0;
+                const c=peColor(d.pe);
+                return(
+                  <div key={d.pe} className="pe-stat-card" style={{borderColor:c+'44'}}>
+                    <div className="pe-stat-card-name" style={{color:c}}>{d.pe}</div>
+                    <div className="pe-stat-row"><span>Active Projects</span><span>{d.count}</span></div>
+                    <div className="pe-stat-row"><span>Completed</span><span style={{color:'var(--success)'}}>{d.finished}</span></div>
+                    {d.overdue>0&&<div className="pe-stat-row"><span>Overdue</span><span style={{color:'var(--danger)'}}>{d.overdue}</span></div>}
+                    {d.totalDetails>0&&<div className="pe-stat-row"><span>Details</span><span>{d.doneDetails}/{d.totalDetails} <span style={{color:'var(--text-muted)',fontWeight:400}}>({detPct}%)</span></span></div>}
+                    {d.totalElevs>0&&<div className="pe-stat-row"><span>Elevations</span><span>{d.doneElevs}/{d.totalElevs} <span style={{color:'var(--text-muted)',fontWeight:400}}>({elvPct}%)</span></span></div>}
+                    {d.totalValue>0&&<div className="pe-stat-row"><span>Total Value</span><span style={{color:'var(--warning)'}}>{fmtDollar(d.totalValue)}</span></div>}
+                    <div style={{marginTop:8,display:'flex',gap:2,height:4,borderRadius:2,overflow:'hidden'}}>
+                      {Object.entries(d.statusBreak).map(([s,n])=>(
+                        <div key={s} title={`${s}: ${n}`} style={{flex:n,background:colorOf(s,DRAFTING_STATUS),minWidth:2}}/>
+                      ))}
+                    </div>
+                    <div style={{display:'flex',flexWrap:'wrap',gap:'4px 8px',marginTop:5}}>
+                      {Object.entries(d.statusBreak).map(([s,n])=>(
+                        <span key={s} style={{fontSize:'0.65rem',color:colorOf(s,DRAFTING_STATUS)}}>{s}: {n}</span>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          {/* Charts */}
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+            <HBarChart title="Active Projects per PE"  data={peData.map(d=>({label:d.pe,val:d.count,color:peColor(d.pe)}))}/>
+            <HBarChart title="Details Drawn per PE"    data={peData.map(d=>({label:d.pe,val:d.doneDetails,color:peColor(d.pe)}))}/>
+            <HBarChart title="Elevations Drawn per PE" data={peData.map(d=>({label:d.pe,val:d.doneElevs,color:peColor(d.pe)}))}/>
+            {hasValue&&<HBarChart title="Total Project Value per PE" data={peData.map(d=>({label:d.pe,val:d.totalValue,color:peColor(d.pe)}))} fmt={fmtDollar}/>}
+          </div>
+          {/* Per-PE project tables */}
+          <div>
+            <div style={{fontSize:'0.72rem',textTransform:'uppercase',letterSpacing:'0.1em',color:'var(--text-muted)',marginBottom:10,fontWeight:600}}>Projects by PE</div>
+            {peData.map(d=>(
+              <div key={d.pe} style={{marginBottom:16}}>
+                <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:8}}>
+                  <span style={{fontWeight:700,color:peColor(d.pe),fontSize:'0.88rem'}}>{d.pe}</span>
+                  <div style={{flex:1,height:1,background:peColor(d.pe)+'44'}}/>
+                  <span style={{fontSize:'0.72rem',color:'var(--text-muted)'}}>{d.count} project{d.count!==1?'s':''}</span>
+                </div>
+                <div className="table-wrap">
+                  <table className="table" style={{fontSize:'0.78rem'}}>
+                    <thead><tr><th>PRI</th><th>Project</th><th>Status</th><th>Due</th><th>Details</th><th>Elevs</th><th>Progress</th>{d.projs.some(p=>p.price)&&<th>Value</th>}</tr></thead>
+                    <tbody>
+                      {d.projs.sort((a,b)=>(parseInt(a.pri)||9999)-(parseInt(b.pri)||9999)).map(p=>{
+                        const pct=calcPct(p);
+                        const fill=pct===100?'var(--success)':pct>50?'var(--accent)':'#f59e0b';
+                        const tot=(+p.detailsTotal||0)+(+p.elevationsTotal||0);
+                        const ov=isOverdue(p.dueDate,p.draftingStatus);
+                        return(
+                          <tr key={p.id} onClick={()=>setModal({mode:'edit',project:p})} title="Click to edit">
+                            <td style={{color:'var(--text-muted)',textAlign:'center'}}>{p.pri||'—'}</td>
+                            <td style={{fontWeight:500,maxWidth:180,overflow:'hidden',textOverflow:'ellipsis'}}>{p.name}</td>
+                            <td><Badge val={p.draftingStatus} arr={DRAFTING_STATUS}/></td>
+                            <td style={{whiteSpace:'nowrap',color:ov?'var(--danger)':'inherit'}}>{fmtDate(p.dueDate)}{ov&&<span className="overdue-tag">!</span>}</td>
+                            <td style={{textAlign:'center'}}>{(+p.detailsTotal||0)?`${+p.detailsDone||0}/${+p.detailsTotal}`:'—'}</td>
+                            <td style={{textAlign:'center'}}>{(+p.elevationsTotal||0)?`${+p.elevationsDone||0}/${+p.elevationsTotal}`:'—'}</td>
+                            <td style={{minWidth:80}}>{tot?(<div className="prog-bar"><div className="prog-track"><div className="prog-fill" style={{width:`${pct}%`,background:fill}}/></div><span className="prog-label">{pct}%</span></div>):<span style={{color:'var(--text-muted)'}}>—</span>}</td>
+                            {d.projs.some(pp=>pp.price)&&<td style={{color:'var(--warning)',fontSize:'0.76rem'}}>{p.price||'—'}</td>}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    return(
+      <>
+        <header className="app-header">
+          <div className="app-title">
+            <h1>Northshore Exteriors — Drafting Tracker</h1>
+            <span className="app-subtitle">Synced to Google Sheets · Export JSON as backup</span>
+          </div>
+          <div className="app-actions">
+            <label className="file-button"><input type="file" accept="application/json" onChange={handleImport}/><span>↑ Import</span></label>
+            <button onClick={handleExport}>↓ Export</button>
+            <button className="btn-primary" onClick={()=>setModal({mode:'add'})}>+ Add Project</button>
+          </div>
+        </header>
+
+        {/* Sync status bar */}
+        <div className="sync-bar">
+          <div className={`sync-dot ${syncStatus==='saving'||syncStatus==='loading'?'busy':syncStatus==='error'?'err':'ok'}`}/>
+          <span className="sync-msg">{syncMsg}</span>
+          {syncStatus==='error'&&<span style={{color:'var(--text-muted)',marginLeft:'auto',fontSize:'0.72rem'}}>Data cached locally — will retry on next save</span>}
+        </div>
+
+        <main className="app-main">
+          {/* Sidebar */}
+          <section className="sidebar">
+            <h2>Search</h2>
+            <input type="search" placeholder="Name, job #, PE…" value={search} onChange={e=>setSearch(e.target.value)} style={{width:'100%'}}/>
+
+            <h2>Filter — Status</h2>
+            <div className="panel">
+              {DRAFTING_STATUS.map(s=>(
+                <label key={s.value} className="filter-row">
+                  <input type="checkbox" checked={fStatus.includes(s.value)} onChange={()=>toggleF(fStatus,setFStatus,s.value)}/>
+                  <span style={{color:fStatus.includes(s.value)?s.color:'var(--text-muted)',fontSize:'0.8rem'}}>{s.value}</span>
+                  <span className="filter-count">{active.filter(p=>p.draftingStatus===s.value).length}</span>
+                </label>
+              ))}
+            </div>
+
+            <h2>Filter — Division</h2>
+            <div className="panel">
+              {DIVISIONS.map(d=>(
+                <label key={d.value} className="filter-row">
+                  <input type="checkbox" checked={fDiv.includes(d.value)} onChange={()=>toggleF(fDiv,setFDiv,d.value)}/>
+                  <span style={{color:fDiv.includes(d.value)?d.color:'var(--text-muted)'}}>{d.value}</span>
+                  <span className="filter-count">{active.filter(p=>p.division===d.value).length}</span>
+                </label>
+              ))}
+            </div>
+
+            {hasF&&<button onClick={()=>{setFStatus([]);setFDiv([]);setSearch('');}} style={{fontSize:'0.78rem',color:'var(--text-muted)'}}>✕ Clear Filters</button>}
+
+            <h2>Sort By</h2>
+            <div className="panel" style={{padding:'8px'}}>
+              {SORT_OPTIONS.map(o=>(
+                <button key={o.value} className={`view-btn ${sortBy===o.value?'view-btn--active':''}`} onClick={()=>handleSort(o.value)} style={{justifyContent:'space-between'}}>
+                  <span>{o.label}</span>
+                  {sortBy===o.value&&<span style={{fontSize:'0.7rem',color:'var(--accent)'}}>{sortDir==='asc'?'↑ Asc':'↓ Desc'}</span>}
+                </button>
+              ))}
+            </div>
+
+            <h2>Stats</h2>
+            <div className="panel">
+              <div className="stat-row" style={{marginBottom:8}}><span style={{color:'var(--text)',fontWeight:600}}>Active</span><span style={{fontWeight:700}}>{stats.total}</span></div>
+              {DRAFTING_STATUS.map(s=>(
+                <div key={s.value} className="stat-row">
+                  <span style={{color:'var(--text-muted)',fontSize:'0.78rem'}}>{s.value}</span>
+                  <span style={{color:s.color,fontWeight:600}}>{stats[s.value]||0}</span>
+                </div>
+              ))}
+              <div className="stat-row" style={{marginTop:8,paddingTop:8,borderTop:'1px solid var(--border)'}}>
+                <span style={{color:'var(--text-muted)'}}>Archived</span>
+                <span style={{color:'var(--warning)',fontWeight:600}}>{archived.length}</span>
+              </div>
+            </div>
+          </section>
+
+          {/* Content */}
+          <section className="content">
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:8}}>
+              <div className="tab-bar">
+                <button className={`tab-btn ${tab==='active'?'active':''}`} onClick={()=>setTab('active')}>Active ({active.length})</button>
+                <button className={`tab-btn ${tab==='archived'?'active':''}`} onClick={()=>setTab('archived')}>Archived ({archived.length})</button>
+              </div>
+              <div style={{display:'flex',alignItems:'center',gap:10}}>
+                {displayed.length!==base.length&&<span style={{color:'var(--text-muted)',fontSize:'0.8rem'}}>{displayed.length} of {base.length}</span>}
+                <div className="view-toggle">
+                  <button className={`view-toggle-btn ${view==='detailed'?'active':''}`} onClick={()=>setView('detailed')}>⊞ Detailed</button>
+                  <button className={`view-toggle-btn ${view==='quick'?'active':''}`} onClick={()=>setView('quick')}>◫ Quick</button>
+                  <button className={`view-toggle-btn ${view==='report'?'active':''}`} onClick={()=>setView('report')}>📊 PE Report</button>
+                </div>
+              </div>
+            </div>
+
+            {view==='detailed'?<DetailedTable/>:view==='quick'?<QuickView/>:<PEReport/>}
+          </section>
+        </main>
+
+        <footer className="app-footer">Northshore Exteriors — Drafting Tracker · Synced to Google Sheets · Export JSON as additional backup</footer>
+
+        {modal&&<ProjectModal project={modal.mode==='edit'?modal.project:null} onSave={handleSave} onClose={()=>setModal(null)}/>}
+
+        {confirm?.type==='archive'&&(
+          <ConfirmDialog title="Archive Project" message={`Archive "${confirm.project.name}"? It can be restored from the Archived tab.`}
+            confirmLabel="Archive" confirmClass="btn-warning"
+            onConfirm={()=>doArchive(confirm.project)} onCancel={()=>setConfirm(null)}/>
+        )}
+        {confirm?.type==='delete'&&(
+          <ConfirmDialog title="Delete Project" message={`Permanently delete "${confirm.project.name}"? This cannot be undone.`}
+            confirmLabel="Delete" confirmClass="btn-danger"
+            onConfirm={()=>doDelete(confirm.project)} onCancel={()=>setConfirm(null)}/>
+        )}
+      </>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
