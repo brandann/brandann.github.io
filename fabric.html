@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fabric Analyzer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,500;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F3EE;
+    --surface: #FFFFFF;
+    --surface2: #ECEAE4;
+    --border: #D8D5CC;
+    --text: #1C1C1A;
+    --muted: #6B6860;
+    --green: #2A5C26;
+    --green-bg: #EAF2E8;
+    --amber: #7A4A0E;
+    --amber-bg: #FDF3E3;
+    --red: #7A1A1A;
+    --red-bg: #FDEAEA;
+    --accent: #2A5C26;
+    --mono: 'DM Mono', monospace;
+    --serif: 'Fraunces', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  header {
+    background: var(--text);
+    color: #F5F3EE;
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  header h1 {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: 28px;
+    letter-spacing: -0.5px;
+    color: #F5F3EE;
+  }
+
+  header span {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #888880;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  @media (max-width: 680px) {
+    .main { grid-template-columns: 1fr; }
+    header { padding: 20px 20px 16px; }
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 14px 18px 12px;
+    border-bottom: 0.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .panel-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .panel-body { padding: 18px; }
+
+  label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  input[type="text"], select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  input[type="text"]:focus, select:focus {
+    border-color: var(--accent);
+  }
+
+  input[type="number"] {
+    width: 80px;
+    padding: 8px 10px;
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  input[type="number"]:focus { border-color: var(--accent); }
+
+  .row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    margin-top: 14px;
+  }
+
+  .row .grow { flex: 1; }
+
+  .add-btn {
+    padding: 8px 16px;
+    background: var(--text);
+    color: #F5F3EE;
+    border: none;
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+    height: 36px;
+  }
+
+  .add-btn:hover { opacity: 0.8; }
+  .add-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .pct-bar-wrap {
+    margin-top: 16px;
+    background: var(--surface2);
+    border-radius: 4px;
+    height: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .pct-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 4px;
+    transition: width 0.3s;
+  }
+
+  .pct-bar.over { background: var(--red); }
+
+  .pct-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .pct-label .remaining { font-weight: 500; color: var(--text); }
+  .pct-label .remaining.over { color: var(--red); }
+
+  .fiber-list {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 40px;
+  }
+
+  .fiber-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+  .fiber-swatch {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .fiber-name { flex: 1; font-size: 12px; }
+
+  .fiber-pct {
+    font-weight: 500;
+    font-size: 12px;
+    min-width: 38px;
+    text-align: right;
+  }
+
+  .remove-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    padding: 0 2px;
+    transition: color 0.15s;
+  }
+
+  .remove-btn:hover { color: var(--red); }
+
+  .empty-state {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 20px 0;
+  }
+
+  .results-panel {
+    grid-column: 1 / -1;
+  }
+
+  .grades-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 540px) {
+    .grades-grid { grid-template-columns: 1fr; }
+  }
+
+  .grade-card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 16px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .grade-card .label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  .grade-letter {
+    font-family: var(--serif);
+    font-size: 64px;
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .grade-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .score-bar-wrap {
+    background: var(--surface2);
+    border-radius: 4px;
+    height: 4px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+
+  .score-bar { height: 100%; border-radius: 4px; transition: width 0.5s ease, background 0.5s; }
+
+  .grade-A .grade-letter { color: var(--green); }
+  .grade-A .score-bar { background: var(--green); }
+  .grade-B .grade-letter { color: #3A7A2A; }
+  .grade-B .score-bar { background: #3A7A2A; }
+  .grade-C .grade-letter { color: #8A7020; }
+  .grade-C .score-bar { background: #8A7020; }
+  .grade-D .grade-letter { color: #B05010; }
+  .grade-D .score-bar { background: #B05010; }
+  .grade-F .grade-letter { color: var(--red); }
+  .grade-F .score-bar { background: var(--red); }
+
+  .warnings-section {
+    margin-top: 20px;
+    border-top: 0.5px solid var(--border);
+    padding-top: 16px;
+  }
+
+  .warn-title {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+
+  .warn-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 8px;
+  }
+
+  .warn-item {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .warn-item.high { background: var(--red-bg); color: var(--red); }
+  .warn-item.med { background: var(--amber-bg); color: var(--amber); }
+  .warn-item.low { background: var(--green-bg); color: var(--green); }
+
+  .warn-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+  .high .warn-dot { background: var(--red); }
+  .med .warn-dot { background: var(--amber); }
+  .low .warn-dot { background: var(--green); }
+
+  .fiber-source {
+    font-size: 10px;
+    opacity: 0.7;
+    margin-top: 1px;
+    display: block;
+  }
+
+  .placeholder-results {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+  }
+
+  .placeholder-results p {
+    font-size: 13px;
+    margin-top: 8px;
+  }
+
+  .placeholder-big {
+    font-family: var(--serif);
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--border);
+  }
+
+  .garment-name-wrap { margin-bottom: 16px; }
+
+  .cat-tag {
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 500;
+    margin-left: 6px;
+  }
+
+  .cat-natural { background: var(--green-bg); color: var(--green); }
+  .cat-semi { background: var(--amber-bg); color: var(--amber); }
+  .cat-synthetic { background: var(--red-bg); color: var(--red); }
+
+  .history-section {
+    max-width: 960px;
+    margin: 0 auto 60px;
+    padding: 0 24px;
+  }
+
+  .history-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .history-title {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .history-count {
+    font-size: 10px;
+    background: var(--surface2);
+    color: var(--muted);
+    border-radius: 20px;
+    padding: 2px 8px;
+    font-weight: 500;
+  }
+
+  .history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  .history-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    animation: fadeIn 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .history-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .history-card.hc-A::before { background: var(--green); }
+  .history-card.hc-B::before { background: #3A7A2A; }
+  .history-card.hc-C::before { background: #8A7020; }
+  .history-card.hc-D::before { background: #B05010; }
+  .history-card.hc-F::before { background: var(--red); }
+
+  .hc-name {
+    font-family: var(--serif);
+    font-size: 15px;
+    font-weight: 300;
+    margin-bottom: 12px;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .hc-name.unnamed { color: var(--muted); font-style: italic; }
+
+  .hc-grades {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .hc-grade-pill {
+    flex: 1;
+    text-align: center;
+    padding: 6px 4px;
+    border-radius: 6px;
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+  }
+
+  .hc-grade-pill .pill-label {
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .hc-grade-pill .pill-val {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1;
+  }
+
+  .grade-A .pill-val, .pill-val.gA { color: var(--green); }
+  .grade-B .pill-val, .pill-val.gB { color: #3A7A2A; }
+  .grade-C .pill-val, .pill-val.gC { color: #8A7020; }
+  .grade-D .pill-val, .pill-val.gD { color: #B05010; }
+  .grade-F .pill-val, .pill-val.gF { color: var(--red); }
+
+  .hc-fibers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .hc-fiber-tag {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: var(--surface2);
+    color: var(--muted);
+  }
+
+  .hc-timestamp {
+    font-size: 10px;
+    color: var(--border);
+    margin-top: 10px;
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 12px;
+  }
+
+  .detail-row:last-child { border-bottom: none; }
+  .detail-key { color: var(--muted); }
+  .detail-val { font-weight: 500; }
+
+  .level-low { color: var(--green); }
+  .level-med { color: var(--amber); }
+  .level-high { color: var(--red); }
+
+  .breakdown-panel { margin-top: 20px; border-top: 0.5px solid var(--border); padding-top: 16px; }
+
+  .breakdown-title {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+
+  .breakdown-fiber {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 0.5px solid var(--border);
+    font-size: 12px;
+  }
+
+  .breakdown-fiber:last-child { border-bottom: none; }
+  .bf-name { font-weight: 500; }
+  .bf-pct { color: var(--muted); min-width: 36px; text-align: right; }
+  .bf-c, .bf-s { min-width: 56px; text-align: right; }
+
+  .reset-btn {
+    padding: 6px 14px;
+    background: none;
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+
+  .reset-btn:hover { border-color: var(--red); color: var(--red); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Fabric Analyzer</h1>
+  <span>Garment chemical &amp; skin exposure grader</span>
+</header>
+
+<div class="main">
+
+  <!-- Builder panel -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Build your garment</span>
+      <button class="reset-btn" onclick="resetAll()">Reset</button>
+    </div>
+    <div class="panel-body">
+
+      <div class="garment-name-wrap">
+        <label>Garment name (optional)</label>
+        <input type="text" id="garmentName" placeholder="e.g. American Eagle modal shorts" oninput="updateResults()">
+      </div>
+
+      <label>Add fiber</label>
+      <select id="fiberSelect">
+        <option value="">— select a fiber —</option>
+      </select>
+
+      <div class="row">
+        <div>
+          <label>Percentage</label>
+          <input type="number" id="pctInput" min="1" max="100" placeholder="%" value="">
+        </div>
+        <button class="add-btn" onclick="addFiber()">Add fiber</button>
+      </div>
+
+      <div class="pct-bar-wrap" style="margin-top:16px">
+        <div class="pct-bar" id="pctBar" style="width:0%"></div>
+      </div>
+      <div class="pct-label">
+        <span>Composition</span>
+        <span class="remaining" id="pctRemaining">0% used — add fibers</span>
+      </div>
+
+      <div class="fiber-list" id="fiberList">
+        <div class="empty-state">No fibers added yet</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Info panel -->
+  <div class="panel">
+    <div class="panel-header">
+      <span class="panel-title">Fiber reference</span>
+    </div>
+    <div class="panel-body" id="fiberInfo">
+      <div class="placeholder-results">
+        <div class="placeholder-big">?</div>
+        <p>Select a fiber from the dropdown to see its profile</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div class="panel results-panel">
+    <div class="panel-header">
+      <span class="panel-title">Garment grade</span>
+      <span id="garmentLabel" style="font-size:11px;color:var(--muted)"></span>
+    </div>
+    <div class="panel-body" id="resultsBody">
+      <div class="placeholder-results">
+        <div class="placeholder-big">—</div>
+        <p>Add fibers and percentages to generate a grade</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="history-section" id="historySection" style="display:none">
+  <div class="history-header">
+    <span class="history-title">Saved garments</span>
+    <span class="history-count" id="historyCount">0</span>
+  </div>
+  <div class="history-grid" id="historyGrid"></div>
+</div>
+
+<script>
+const DB = {
+  "Cotton (conventional)": {
+    cat:"Natural fiber",
+    chem:"High", osm:"Medium", env:"High",
+    chemNotes:"Formaldehyde, chlorine bleach, AZO dyes, pesticide residue",
+    osmNotes:"AZO dyes absorb on skin contact; formaldehyde off-gasses from surface",
+    warns:[
+      {level:"high", text:"Wash before first wear to reduce formaldehyde and dye residue"},
+      {level:"high", text:"Avoid 'wrinkle-free' or 'easy care' labels — heavy formaldehyde treatment"},
+      {level:"med", text:"Bright or dark colors carry a higher AZO dye load"},
+      {level:"med", text:"Denim is almost always conventionally processed cotton"}
+    ]
+  },
+  "Organic cotton": {
+    cat:"Natural fiber",
+    chem:"Medium", osm:"Low", env:"Medium",
+    chemNotes:"No synthetic pesticides in farming; dyes and finishes still vary unless GOTS certified",
+    osmNotes:"Significantly lower chemical residue than conventional; GOTS certified = very low risk",
+    warns:[
+      {level:"med", text:"'Organic cotton' label alone doesn't guarantee clean dyes"},
+      {level:"low", text:"Look for GOTS or OEKO-TEX Standard 100 certification for full chain verification"}
+    ]
+  },
+  "Linen": {
+    cat:"Natural fiber",
+    chem:"Low", osm:"Low", env:"Low",
+    chemNotes:"Minimal processing needed; European linen uses cleaner water/dew retting by default",
+    osmNotes:"Very low risk; naturally hypoallergenic; minimal dye load due to natural texture",
+    warns:[
+      {level:"low", text:"Non-European linen may use chemical retting — less regulated"},
+      {level:"low", text:"'Linen blend' on a label often means linen + polyester — check content"}
+    ]
+  },
+  "Wool": {
+    cat:"Natural fiber",
+    chem:"Low", osm:"Low", env:"Medium",
+    chemNotes:"Naturally antimicrobial; no synthetic finishing required; some brands apply moth-proofing",
+    osmNotes:"Very low; natural protein fiber is skin-compatible; any itchiness is mechanical, not chemical",
+    warns:[
+      {level:"med", text:"Check for mulesing-free and ZQ or RWS certification for animal welfare"},
+      {level:"low", text:"Some brands apply synthetic moth-proofing treatments — ask before buying"}
+    ]
+  },
+  "Merino wool": {
+    cat:"Natural fiber",
+    chem:"Low", osm:"Low", env:"Medium",
+    chemNotes:"Clean profile; Superwash treatment (for machine-washable merino) adds chlorine or polymer coating",
+    osmNotes:"Very fine fibers; excellent skin comfort; Superwash polymer coating is low but non-zero exposure",
+    warns:[
+      {level:"med", text:"'Machine washable' merino almost always means Superwash treated — adds plastic polymer coating"},
+      {level:"med", text:"Superwash treatment means the garment is no longer fully biodegradable"},
+      {level:"low", text:"ZQ, RWS, or mulesing-free certification matters for animal welfare"}
+    ]
+  },
+  "Cashmere": {
+    cat:"Natural fiber",
+    chem:"Low", osm:"Low", env:"Medium",
+    chemNotes:"Natural protein fiber; minimal processing; dye process is the main variable",
+    osmNotes:"Extremely fine, soft fibers; very low skin irritation or absorption risk",
+    warns:[
+      {level:"high", text:"Cashmere goat overgrazing is causing serious desertification in Mongolia and China"},
+      {level:"med", text:"Cheap cashmere signals poor fiber quality and unverified sourcing"},
+      {level:"low", text:"Look for SFA (Sustainable Fibre Alliance) certification for verified sourcing"}
+    ]
+  },
+  "Hemp": {
+    cat:"Natural fiber",
+    chem:"Low", osm:"Low", env:"Low",
+    chemNotes:"Grows without pesticides or fertilizers; minimal processing needed; very similar to linen",
+    osmNotes:"Very low risk; no known skin sensitizers in properly processed hemp",
+    warns:[
+      {level:"low", text:"Often feels coarse unless blended with cotton or linen"},
+      {level:"low", text:"Limited supply due to historical farming restrictions in parts of the US"}
+    ]
+  },
+  "Silk": {
+    cat:"Natural fiber",
+    chem:"Low", osm:"Low", env:"Medium",
+    chemNotes:"Minimal chemical processing required; protein-based fiber; dyes well with low chemical load",
+    osmNotes:"Hypoallergenic protein fiber; naturally compatible with skin",
+    warns:[
+      {level:"med", text:"Animal welfare concern — silkworms are killed in conventional silk production"},
+      {level:"low", text:"Peace/Ahimsa silk exists as an ethical alternative"}
+    ]
+  },
+  "Lenzing Modal (TENCEL Modal)": {
+    cat:"Semi-synthetic",
+    chem:"Low", osm:"Low", env:"Low",
+    chemNotes:"Sustainably sourced beech trees (PEFC certified); eco-friendly bleaching; 10–20x less water than conventional cotton",
+    osmNotes:"Finished fabric safe; OEKO-TEX Standard 100 certified in most cases; no harmful residual chemicals",
+    warns:[
+      {level:"med", text:"Generic 'modal' is a completely different and dirtier product — verify Lenzing or TENCEL branding"},
+      {level:"low", text:"Soft and drapey; excellent for close-skin garments"}
+    ]
+  },
+  "Modal (generic)": {
+    cat:"Semi-synthetic",
+    chem:"Medium", osm:"Low", env:"Medium",
+    chemNotes:"Beech wood pulp dissolved in chemicals including carbon disulfide; chemical recovery varies by manufacturer",
+    osmNotes:"Finished fabric generally safe for skin; processing chemicals don't typically remain at harmful levels",
+    warns:[
+      {level:"high", text:"Generic 'modal' with no brand identifier may use the same dirty process as conventional viscose"},
+      {level:"med", text:"Sustainability and chemical safety depend entirely on the manufacturer — no way to verify without certification"}
+    ]
+  },
+  "Lyocell / Tencel": {
+    cat:"Semi-synthetic",
+    chem:"Low", osm:"Low", env:"Low",
+    chemNotes:"Closed-loop system recovers 99%+ of solvents; non-toxic amine oxide solvent recaptured and reused",
+    osmNotes:"Very low finished fabric risk; OEKO-TEX certified; no residual harmful chemicals",
+    warns:[
+      {level:"low", text:"Tencel is the Lenzing brand name; generic lyocell quality varies — look for Lenzing or certification"},
+      {level:"low", text:"Don't confuse Tencel Lyocell and Tencel Modal — they are different manufacturing processes"}
+    ]
+  },
+  "Viscose / Rayon": {
+    cat:"Semi-synthetic",
+    chem:"High", osm:"Low", env:"High",
+    chemNotes:"Carbon disulfide used to dissolve wood pulp — highly toxic to workers; chemicals typically not recovered",
+    osmNotes:"Finished fabric generally low risk for wearer; concern is manufacturing workers and surrounding environment",
+    warns:[
+      {level:"high", text:"One of the worst semi-synthetic options for worker safety and environmental impact"},
+      {level:"high", text:"Often marketed with vague 'natural' language — it is not natural in processing"},
+      {level:"med", text:"Look for EcoVero if you must buy viscose — it uses a closed-loop process"}
+    ]
+  },
+  "Bamboo fabric": {
+    cat:"Semi-synthetic",
+    chem:"High", osm:"Low", env:"High",
+    chemNotes:"Bamboo soft fabric is made via the viscose process — same carbon disulfide chemistry, not mechanical",
+    osmNotes:"Finished fabric low risk for wearer, same profile as viscose; concern is manufacturing",
+    warns:[
+      {level:"high", text:"Classic greenwashing — the bamboo plant is sustainable but the manufacturing process is not"},
+      {level:"high", text:"FTC has sued brands for mislabeling bamboo viscose as simply 'bamboo'"},
+      {level:"low", text:"Bamboo linen (mechanical process) is the clean version but rare and more expensive"}
+    ]
+  },
+  "Fleece (synthetic)": {
+    cat:"Synthetic",
+    chem:"High", osm:"Medium", env:"High",
+    chemNotes:"Almost always 100% polyester — petroleum-based; may contain PFAS coatings for moisture management",
+    osmNotes:"Microplastics shed from fleece surface with every wash and through skin abrasion; PFAS can absorb transdermally",
+    warns:[
+      {level:"high", text:"One of the worst microplastic shedders — releases hundreds of thousands of fibers per wash"},
+      {level:"high", text:"Marketed as cozy and natural-feeling but is 100% plastic"},
+      {level:"med", text:"Recycled fleece (rPET) is better from carbon standpoint but sheds identical microplastics"},
+      {level:"low", text:"Use a Guppyfriend washing bag to capture microplastics if you own fleece — real mitigation"}
+    ]
+  },
+  "Polyester": {
+    cat:"Synthetic",
+    chem:"High", osm:"Medium", env:"High",
+    chemNotes:"Petroleum-based plastic; manufactured with toxic chemicals; PFAS coatings common for water resistance",
+    osmNotes:"Microplastics shed from surface and inhaled or absorbed; PFAS from coatings absorb transdermally; traps heat and moisture",
+    warns:[
+      {level:"high", text:"Non-biodegradable — takes 20 to 200 years to break down"},
+      {level:"high", text:"Microplastics from polyester clothing found in human blood and breast milk"},
+      {level:"high", text:"PFAS water-resistant coatings are forever chemicals with serious health links"},
+      {level:"med", text:"Recycled polyester (rPET) reduces carbon but still sheds identical microplastics"}
+    ]
+  },
+  "Nylon": {
+    cat:"Synthetic",
+    chem:"High", osm:"Medium", env:"High",
+    chemNotes:"Petroleum-based; adipic acid production emits significant N2O; often treated with PFAS in activewear",
+    osmNotes:"Similar to polyester — microplastic shedding; PFAS absorption potential; common in tights and swimwear",
+    warns:[
+      {level:"high", text:"N2O (nitrous oxide) emissions from nylon production are 300x more potent than CO2"},
+      {level:"med", text:"Common in activewear and swimwear — high skin contact area + PFAS risk combination"},
+      {level:"low", text:"ECONYL (recycled nylon from fishing nets) is a substantially cleaner alternative"}
+    ]
+  },
+  "Elastane / Spandex / Lycra": {
+    cat:"Synthetic",
+    chem:"High", osm:"Medium", env:"High",
+    chemNotes:"Petroleum-based polyurethane; always synthetic; heat-activated off-gassing in small amounts; PFAS sometimes added",
+    osmNotes:"Sits against skin constantly in form-fitting garments; heat-activated off-gassing; small but persistent exposure",
+    warns:[
+      {level:"high", text:"Even 2–5% elastane means the garment is not biodegradable — it contaminates otherwise natural fibers"},
+      {level:"high", text:"Prevents composting or natural breakdown of blended 'natural fiber' garments"},
+      {level:"med", text:"If a 'cotton' garment stretches significantly — elastane is almost certainly present"},
+      {level:"low", text:"Look for 'elastane-free' if you want truly natural fiber garments"}
+    ]
+  },
+  "Acrylic": {
+    cat:"Synthetic",
+    chem:"High", osm:"Medium", env:"High",
+    chemNotes:"Made from acrylonitrile — a known carcinogen; energy-intensive production",
+    osmNotes:"Microfiber shedding into air and skin contact; acrylonitrile residue possible in cheaper manufacturing",
+    warns:[
+      {level:"high", text:"Acrylonitrile used in production is classified as a probable human carcinogen"},
+      {level:"high", text:"Pills aggressively from first use — very short lifespan despite high environmental cost"},
+      {level:"high", text:"If a cheap 'wool-style' sweater or fleece has no fiber content listed — it is likely acrylic"},
+      {level:"med", text:"Produces 21.1kg CO2 per kg of fiber — highest carbon of any textile fiber"}
+    ]
+  }
+};
+
+const LEVEL_NUM = {Low:1, Medium:2, High:3};
+const SWATCHES = {
+  "Natural fiber": "#2A5C26",
+  "Semi-synthetic": "#8A7020",
+  "Synthetic": "#7A1A1A"
+};
+
+let garment = [];
+
+function populateSelect() {
+  const sel = document.getElementById("fiberSelect");
+  const groups = {};
+  Object.keys(DB).forEach(name => {
+    const cat = DB[name].cat;
+    if (!groups[cat]) groups[cat] = [];
+    groups[cat].push(name);
+  });
+  ["Natural fiber","Semi-synthetic","Synthetic"].forEach(cat => {
+    if (!groups[cat]) return;
+    const og = document.createElement("optgroup");
+    og.label = cat;
+    groups[cat].sort().forEach(name => {
+      const opt = document.createElement("option");
+      opt.value = name;
+      opt.textContent = name;
+      og.appendChild(opt);
+    });
+    sel.appendChild(og);
+  });
+}
+
+function showFiberInfo() {
+  const name = document.getElementById("fiberSelect").value;
+  const el = document.getElementById("fiberInfo");
+  if (!name || !DB[name]) {
+    el.innerHTML = `<div class="placeholder-results"><div class="placeholder-big">?</div><p>Select a fiber to see its profile</p></div>`;
+    return;
+  }
+  const f = DB[name];
+  const catClass = f.cat === "Natural fiber" ? "cat-natural" : f.cat === "Semi-synthetic" ? "cat-semi" : "cat-synthetic";
+  const lvlClass = l => l==="Low"?"level-low":l==="Medium"?"level-med":"level-high";
+  el.innerHTML = `
+    <div style="margin-bottom:14px">
+      <span style="font-weight:500;font-size:14px">${name}</span>
+      <span class="cat-tag ${catClass}">${f.cat}</span>
+    </div>
+    <div class="detail-row"><span class="detail-key">Chemical exposure</span><span class="detail-val ${lvlClass(f.chem)}">${f.chem}</span></div>
+    <div class="detail-row"><span class="detail-key">Skin (osmosis) exposure</span><span class="detail-val ${lvlClass(f.osm)}">${f.osm}</span></div>
+    <div class="detail-row"><span class="detail-key">Environmental impact</span><span class="detail-val ${lvlClass(f.env)}">${f.env}</span></div>
+    <div style="margin-top:14px;padding-top:14px;border-top:0.5px solid var(--border)">
+      <div style="font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Chemical notes</div>
+      <div style="font-size:12px;line-height:1.6;color:var(--muted)">${f.chemNotes}</div>
+    </div>
+    <div style="margin-top:12px">
+      <div style="font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px">Skin notes</div>
+      <div style="font-size:12px;line-height:1.6;color:var(--muted)">${f.osmNotes}</div>
+    </div>
+  `;
+}
+
+document.getElementById("fiberSelect").addEventListener("change", showFiberInfo);
+
+function totalPct() { return garment.reduce((s,f) => s + f.pct, 0); }
+
+function addFiber() {
+  const name = document.getElementById("fiberSelect").value;
+  const pct = parseInt(document.getElementById("pctInput").value);
+  if (!name) { alert("Please select a fiber."); return; }
+  if (!pct || pct < 1 || pct > 100) { alert("Enter a percentage between 1 and 100."); return; }
+  if (totalPct() + pct > 100) { alert(`Only ${100 - totalPct()}% remaining.`); return; }
+  const existing = garment.find(f => f.name === name);
+  if (existing) { existing.pct += pct; }
+  else { garment.push({ name, pct }); }
+  document.getElementById("pctInput").value = "";
+  renderFiberList();
+  updateResults();
+}
+
+function removeFiber(name) {
+  garment = garment.filter(f => f.name !== name);
+  renderFiberList();
+  updateResults();
+}
+
+function renderFiberList() {
+  const el = document.getElementById("fiberList");
+  if (garment.length === 0) {
+    el.innerHTML = `<div class="empty-state">No fibers added yet</div>`;
+    updateBar();
+    return;
+  }
+  el.innerHTML = garment.map(f => {
+    const swatch = SWATCHES[DB[f.name]?.cat] || "#888";
+    return `<div class="fiber-item">
+      <div class="fiber-swatch" style="background:${swatch}"></div>
+      <span class="fiber-name">${f.name}</span>
+      <span class="fiber-pct">${f.pct}%</span>
+      <button class="remove-btn" onclick="removeFiber('${f.name.replace(/'/g,"\\'")}')">×</button>
+    </div>`;
+  }).join("");
+  updateBar();
+}
+
+function updateBar() {
+  const used = totalPct();
+  const bar = document.getElementById("pctBar");
+  const label = document.getElementById("pctRemaining");
+  bar.style.width = Math.min(used, 100) + "%";
+  bar.className = "pct-bar" + (used > 100 ? " over" : "");
+  const rem = 100 - used;
+  label.className = "remaining" + (used > 100 ? " over" : "");
+  if (used === 0) label.textContent = "0% used — add fibers";
+  else if (used === 100) label.textContent = "100% — ready to grade";
+  else if (used > 100) label.textContent = `Over by ${used - 100}%`;
+  else label.textContent = `${used}% used — ${rem}% remaining`;
+}
+
+function scoreToGrade(score) {
+  if (score <= 1.2) return "A";
+  if (score <= 1.6) return "B";
+  if (score <= 2.1) return "C";
+  if (score <= 2.6) return "D";
+  return "F";
+}
+
+function gradeLabel(g) {
+  return {A:"Excellent", B:"Good", C:"Fair", D:"Poor", F:"Avoid"}[g] || "";
+}
+
+function scoreWidth(score) {
+  return Math.round(((score - 1) / 2) * 100);
+}
+
+function updateResults() {
+  const body = document.getElementById("resultsBody");
+  const label = document.getElementById("garmentLabel");
+  const name = document.getElementById("garmentName").value.trim();
+  label.textContent = name || "";
+
+  const used = totalPct();
+  if (garment.length === 0 || used === 0) {
+    body.innerHTML = `<div class="placeholder-results"><div class="placeholder-big">—</div><p>Add fibers and percentages to generate a grade</p></div>`;
+    return;
+  }
+
+  let chemScore = 0, osmScore = 0;
+  garment.forEach(f => {
+    const d = DB[f.name];
+    if (!d) return;
+    const weight = f.pct / used;
+    chemScore += LEVEL_NUM[d.chem] * weight;
+    osmScore += LEVEL_NUM[d.osm] * weight;
+  });
+
+  const overallScore = (chemScore + osmScore) / 2;
+  const chemGrade = scoreToGrade(chemScore);
+  const osmGrade = scoreToGrade(osmScore);
+  const overallGrade = scoreToGrade(overallScore);
+
+  const lvlText = s => s <= 1.2 ? "Low" : s <= 1.9 ? "Medium" : "High";
+  const lvlClass = s => s <= 1.2 ? "level-low" : s <= 1.9 ? "level-med" : "level-high";
+
+  const gradeCard = (title, grade, score, desc) => `
+    <div class="grade-card grade-${grade}">
+      <div class="label">${title}</div>
+      <div class="grade-letter">${grade}</div>
+      <div class="grade-label">${gradeLabel(grade)}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">${desc}</div>
+      <div class="score-bar-wrap">
+        <div class="score-bar" style="width:${scoreWidth(score)}%"></div>
+      </div>
+    </div>`;
+
+  const warnItems = [];
+  garment.forEach(f => {
+    const d = DB[f.name];
+    if (!d) return;
+    d.warns.forEach(w => {
+      warnItems.push({...w, source: f.name, pct: f.pct});
+    });
+  });
+  warnItems.sort((a,b) => {
+    const order = {high:0, med:1, low:2};
+    return order[a.level] - order[b.level];
+  });
+
+  const breakdown = garment.map(f => {
+    const d = DB[f.name];
+    if (!d) return "";
+    return `<div class="breakdown-fiber">
+      <span class="bf-name">${f.name}</span>
+      <span class="bf-pct">${f.pct}%</span>
+      <span class="bf-c ${lvlClass(LEVEL_NUM[d.chem])}">${d.chem}</span>
+      <span class="bf-s ${lvlClass(LEVEL_NUM[d.osm])}">${d.osm}</span>
+    </div>`;
+  }).join("");
+
+  body.innerHTML = `
+    <div class="grades-grid">
+      ${gradeCard("Chemical exposure", chemGrade, chemScore, lvlText(chemScore) + " risk")}
+      ${gradeCard("Skin exposure", osmGrade, osmScore, lvlText(osmScore) + " risk")}
+      ${gradeCard("Overall grade", overallGrade, overallScore, "Weighted composite")}
+    </div>
+
+    ${used < 100 ? `<div style="margin-top:14px;padding:10px 12px;background:var(--amber-bg);border-radius:6px;font-size:12px;color:var(--amber)">
+      Note: composition is ${used}% — grade is estimated on current fibers only. Add the remaining ${100-used}% for an accurate grade.
+    </div>` : ""}
+
+    <div class="breakdown-panel">
+      <div class="breakdown-title">Fiber breakdown</div>
+      <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:8px;padding:0 0 6px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted)">
+        <span>Fiber</span><span style="min-width:36px;text-align:right">%</span><span style="min-width:56px;text-align:right">Chemical</span><span style="min-width:56px;text-align:right">Skin</span>
+      </div>
+      ${breakdown}
+    </div>
+
+    ${warnItems.length > 0 ? `
+    <div class="warnings-section">
+      <div class="warn-title">Warnings &amp; notes (${warnItems.length})</div>
+      <div class="warn-grid">
+        ${warnItems.map(w => `<div class="warn-item ${w.level}">
+          <div class="warn-dot"></div>
+          <div>
+            ${w.text}
+            <span class="fiber-source">— ${w.source} (${w.pct}%)</span>
+          </div>
+        </div>`).join("")}
+      </div>
+    </div>` : ""}
+  `;
+}
+
+let history = [];
+
+function resetAll() {
+  const used = totalPct();
+  if (garment.length > 0 && used > 0) {
+    const name = document.getElementById("garmentName").value.trim();
+    let chemScore = 0, osmScore = 0;
+    garment.forEach(f => {
+      const d = DB[f.name];
+      if (!d) return;
+      const weight = f.pct / used;
+      chemScore += LEVEL_NUM[d.chem] * weight;
+      osmScore += LEVEL_NUM[d.osm] * weight;
+    });
+    const overallScore = (chemScore + osmScore) / 2;
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    history.push({
+      name: name || "Unnamed garment",
+      unnamed: !name,
+      chemGrade: scoreToGrade(chemScore),
+      osmGrade: scoreToGrade(osmScore),
+      overallGrade: scoreToGrade(overallScore),
+      fibers: garment.map(f => ({name: f.name, pct: f.pct})),
+      time: timeStr
+    });
+    renderHistory();
+  }
+  garment = [];
+  document.getElementById("garmentName").value = "";
+  document.getElementById("fiberSelect").value = "";
+  document.getElementById("pctInput").value = "";
+  showFiberInfo();
+  renderFiberList();
+  updateResults();
+}
+
+function renderHistory() {
+  const section = document.getElementById("historySection");
+  const grid = document.getElementById("historyGrid");
+  const count = document.getElementById("historyCount");
+  if (history.length === 0) { section.style.display = "none"; return; }
+  section.style.display = "block";
+  count.textContent = history.length;
+  grid.innerHTML = history.slice().reverse().map(h => {
+    const fibers = h.fibers.map(f => `<span class="hc-fiber-tag">${f.pct}% ${f.name}</span>`).join("");
+    return `<div class="history-card hc-${h.overallGrade}">
+      <div class="hc-name ${h.unnamed ? 'unnamed' : ''}">${h.name}</div>
+      <div class="hc-grades">
+        <div class="hc-grade-pill">
+          <span class="pill-label">Chemical</span>
+          <span class="pill-val g${h.chemGrade}">${h.chemGrade}</span>
+        </div>
+        <div class="hc-grade-pill">
+          <span class="pill-label">Skin</span>
+          <span class="pill-val g${h.osmGrade}">${h.osmGrade}</span>
+        </div>
+        <div class="hc-grade-pill">
+          <span class="pill-label">Overall</span>
+          <span class="pill-val g${h.overallGrade}">${h.overallGrade}</span>
+        </div>
+      </div>
+      <div class="hc-fibers">${fibers}</div>
+      <div class="hc-timestamp">${h.time}</div>
+    </div>`;
+  }).join("");
+}
+
+populateSelect();
+renderFiberList();
+updateResults();
+</script>
+</body>
+</html>
