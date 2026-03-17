@@ -593,6 +593,52 @@
   }
 
   .reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+  .toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    color: var(--muted);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .toggle-wrap input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 28px;
+    height: 16px;
+    background: var(--surface2);
+    border-radius: 8px;
+    border: 0.5px solid var(--border);
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+
+  .toggle-wrap input[type="checkbox"]::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--muted);
+    top: 1px;
+    left: 1px;
+    transition: left 0.2s, background 0.2s;
+  }
+
+  .toggle-wrap input[type="checkbox"]:checked {
+    background: var(--green-bg);
+    border-color: var(--green);
+  }
+
+  .toggle-wrap input[type="checkbox"]:checked::after {
+    left: 13px;
+    background: var(--green);
+  }
 </style>
 </head>
 <body>
@@ -662,6 +708,10 @@
   <div class="panel results-panel">
     <div class="panel-header">
       <span class="panel-title">Garment grade</span>
+      <label class="toggle-wrap" title="Include environmental impact in the overall grade calculation">
+        <input type="checkbox" id="envToggle" onchange="updateResults()">
+        <span>Include environment in grade</span>
+      </label>
       <span id="garmentLabel" style="font-size:11px;color:var(--muted)"></span>
     </div>
     <div class="panel-body" id="resultsBody">
@@ -704,6 +754,17 @@ const DB = {
     warns:[
       {level:"med", text:"'Organic cotton' label alone doesn't guarantee clean dyes"},
       {level:"low", text:"Look for GOTS or OEKO-TEX Standard 100 certification for full chain verification"}
+    ]
+  },
+  "Organic cotton (GOTS / OEKO-TEX certified)": {
+    cat:"Natural fiber",
+    chem:"Low", osm:"Low", env:"Medium",
+    chemNotes:"GOTS certification covers the full supply chain — farming AND processing including dyes. No AZO dyes, no formaldehyde, no chlorine bleach permitted. OEKO-TEX Standard 100 tests the finished fabric for over 100 harmful substances",
+    osmNotes:"Lowest chemical residue of any cotton option. GOTS max formaldehyde threshold is 16mg/kg vs 75mg/kg for conventional European clothing. Very low skin exposure risk",
+    warns:[
+      {level:"low", text:"Still uses significant water in farming — environmental footprint is better but not zero"},
+      {level:"low", text:"Verify the actual certification number on the brand's website — GOTS logos can be faked"},
+      {level:"low", text:"Best choice for sensitive skin, babies, or anyone with chemical sensitivities"}
     ]
   },
   "Linen": {
@@ -999,10 +1060,10 @@ function updateBar() {
 }
 
 function scoreToGrade(score) {
-  if (score <= 1.2) return "A";
-  if (score <= 1.6) return "B";
-  if (score <= 2.1) return "C";
-  if (score <= 2.6) return "D";
+  if (score <= 1.3) return "A";
+  if (score <= 1.7) return "B";
+  if (score <= 2.2) return "C";
+  if (score <= 2.7) return "D";
   return "F";
 }
 
@@ -1018,6 +1079,7 @@ function updateResults() {
   const body = document.getElementById("resultsBody");
   const label = document.getElementById("garmentLabel");
   const name = document.getElementById("garmentName").value.trim();
+  const inclEnv = document.getElementById("envToggle").checked;
   label.textContent = name || "";
 
   const used = totalPct();
@@ -1026,22 +1088,27 @@ function updateResults() {
     return;
   }
 
-  let chemScore = 0, osmScore = 0;
+  let chemScore = 0, osmScore = 0, envScore = 0;
   garment.forEach(f => {
     const d = DB[f.name];
     if (!d) return;
     const weight = f.pct / used;
     chemScore += LEVEL_NUM[d.chem] * weight;
     osmScore += LEVEL_NUM[d.osm] * weight;
+    envScore += LEVEL_NUM[d.env] * weight;
   });
 
-  const overallScore = (chemScore + osmScore) / 2;
+  const overallScore = inclEnv
+    ? (chemScore + osmScore + envScore) / 3
+    : (chemScore + osmScore) / 2;
+
   const chemGrade = scoreToGrade(chemScore);
   const osmGrade = scoreToGrade(osmScore);
+  const envGrade = scoreToGrade(envScore);
   const overallGrade = scoreToGrade(overallScore);
 
-  const lvlText = s => s <= 1.2 ? "Low" : s <= 1.9 ? "Medium" : "High";
-  const lvlClass = s => s <= 1.2 ? "level-low" : s <= 1.9 ? "level-med" : "level-high";
+  const lvlText = s => s <= 1.3 ? "Low" : s <= 2.0 ? "Medium" : "High";
+  const lvlClass = s => s <= 1.3 ? "level-low" : s <= 2.0 ? "level-med" : "level-high";
 
   const gradeCard = (title, grade, score, desc) => `
     <div class="grade-card grade-${grade}">
@@ -1067,22 +1134,32 @@ function updateResults() {
     return order[a.level] - order[b.level];
   });
 
+  const colCount = inclEnv ? "1fr auto auto auto auto" : "1fr auto auto auto";
+  const colHeaders = inclEnv
+    ? `<span>Fiber</span><span style="min-width:36px;text-align:right">%</span><span style="min-width:56px;text-align:right">Chemical</span><span style="min-width:56px;text-align:right">Skin</span><span style="min-width:56px;text-align:right">Env</span>`
+    : `<span>Fiber</span><span style="min-width:36px;text-align:right">%</span><span style="min-width:56px;text-align:right">Chemical</span><span style="min-width:56px;text-align:right">Skin</span>`;
+
   const breakdown = garment.map(f => {
     const d = DB[f.name];
     if (!d) return "";
-    return `<div class="breakdown-fiber">
+    const envCol = inclEnv ? `<span class="bf-s ${lvlClass(LEVEL_NUM[d.env])}">${d.env}</span>` : "";
+    return `<div class="breakdown-fiber" style="grid-template-columns:${colCount}">
       <span class="bf-name">${f.name}</span>
       <span class="bf-pct">${f.pct}%</span>
       <span class="bf-c ${lvlClass(LEVEL_NUM[d.chem])}">${d.chem}</span>
       <span class="bf-s ${lvlClass(LEVEL_NUM[d.osm])}">${d.osm}</span>
+      ${envCol}
     </div>`;
   }).join("");
 
+  const overallDesc = inclEnv ? "Chem + skin + environment" : "Chemical + skin average";
+
   body.innerHTML = `
-    <div class="grades-grid">
+    <div class="grades-grid" style="${inclEnv ? 'grid-template-columns:repeat(4,1fr)' : ''}">
       ${gradeCard("Chemical exposure", chemGrade, chemScore, lvlText(chemScore) + " risk")}
       ${gradeCard("Skin exposure", osmGrade, osmScore, lvlText(osmScore) + " risk")}
-      ${gradeCard("Overall grade", overallGrade, overallScore, "Weighted composite")}
+      ${inclEnv ? gradeCard("Environmental", envGrade, envScore, lvlText(envScore) + " impact") : ""}
+      ${gradeCard("Overall grade", overallGrade, overallScore, overallDesc)}
     </div>
 
     ${used < 100 ? `<div style="margin-top:14px;padding:10px 12px;background:var(--amber-bg);border-radius:6px;font-size:12px;color:var(--amber)">
@@ -1091,8 +1168,8 @@ function updateResults() {
 
     <div class="breakdown-panel">
       <div class="breakdown-title">Fiber breakdown</div>
-      <div style="display:grid;grid-template-columns:1fr auto auto auto;gap:8px;padding:0 0 6px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted)">
-        <span>Fiber</span><span style="min-width:36px;text-align:right">%</span><span style="min-width:56px;text-align:right">Chemical</span><span style="min-width:56px;text-align:right">Skin</span>
+      <div style="display:grid;grid-template-columns:${colCount};gap:8px;padding:0 0 6px;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted)">
+        ${colHeaders}
       </div>
       ${breakdown}
     </div>
@@ -1119,15 +1196,19 @@ function resetAll() {
   const used = totalPct();
   if (garment.length > 0 && used > 0) {
     const name = document.getElementById("garmentName").value.trim();
-    let chemScore = 0, osmScore = 0;
+    const inclEnv = document.getElementById("envToggle").checked;
+    let chemScore = 0, osmScore = 0, envScore = 0;
     garment.forEach(f => {
       const d = DB[f.name];
       if (!d) return;
       const weight = f.pct / used;
       chemScore += LEVEL_NUM[d.chem] * weight;
       osmScore += LEVEL_NUM[d.osm] * weight;
+      envScore += LEVEL_NUM[d.env] * weight;
     });
-    const overallScore = (chemScore + osmScore) / 2;
+    const overallScore = inclEnv
+      ? (chemScore + osmScore + envScore) / 3
+      : (chemScore + osmScore) / 2;
     const now = new Date();
     const timeStr = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
     history.push({
@@ -1135,7 +1216,9 @@ function resetAll() {
       unnamed: !name,
       chemGrade: scoreToGrade(chemScore),
       osmGrade: scoreToGrade(osmScore),
+      envGrade: scoreToGrade(envScore),
       overallGrade: scoreToGrade(overallScore),
+      inclEnv,
       fibers: garment.map(f => ({name: f.name, pct: f.pct})),
       time: timeStr
     });
@@ -1159,6 +1242,10 @@ function renderHistory() {
   count.textContent = history.length;
   grid.innerHTML = history.slice().reverse().map(h => {
     const fibers = h.fibers.map(f => `<span class="hc-fiber-tag">${f.pct}% ${f.name}</span>`).join("");
+    const envPill = h.inclEnv ? `<div class="hc-grade-pill">
+        <span class="pill-label">Env</span>
+        <span class="pill-val g${h.envGrade}">${h.envGrade}</span>
+      </div>` : "";
     return `<div class="history-card hc-${h.overallGrade}">
       <div class="hc-name ${h.unnamed ? 'unnamed' : ''}">${h.name}</div>
       <div class="hc-grades">
@@ -1170,6 +1257,7 @@ function renderHistory() {
           <span class="pill-label">Skin</span>
           <span class="pill-val g${h.osmGrade}">${h.osmGrade}</span>
         </div>
+        ${envPill}
         <div class="hc-grade-pill">
           <span class="pill-label">Overall</span>
           <span class="pill-val g${h.overallGrade}">${h.overallGrade}</span>
