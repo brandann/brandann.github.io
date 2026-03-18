@@ -594,6 +594,206 @@
 
   .reset-btn:hover { border-color: var(--red); color: var(--red); }
 
+  .expand-section {
+    max-width: 960px;
+    margin: 0 auto 20px;
+    padding: 0 24px;
+  }
+
+  .expand-toggle {
+    width: 100%;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    text-align: left;
+    transition: background 0.15s;
+  }
+
+  .expand-toggle:hover { background: var(--surface2); }
+
+  .expand-toggle.open { border-radius: 12px 12px 0 0; border-bottom-color: transparent; }
+
+  .expand-toggle .toggle-label { display: flex; align-items: center; gap: 10px; }
+
+  .expand-toggle .toggle-meta { font-size: 11px; color: var(--muted); font-weight: 400; }
+
+  .expand-arrow { font-size: 12px; color: var(--muted); transition: transform 0.2s; }
+  .expand-toggle.open .expand-arrow { transform: rotate(180deg); }
+
+  .expand-body {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.35s ease;
+  }
+
+  .expand-body.open { max-height: 9000px; }
+
+  .expand-inner { padding: 20px; }
+
+  .lib-category {
+    margin-bottom: 28px;
+  }
+
+  .lib-category:last-child { margin-bottom: 0; }
+
+  .lib-cat-title {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--muted);
+    padding-bottom: 10px;
+    border-bottom: 0.5px solid var(--border);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .lib-cat-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .lib-item {
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+
+  .lib-item-header {
+    display: grid;
+    grid-template-columns: 1fr auto auto auto;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 14px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--bg);
+    transition: background 0.1s;
+  }
+
+  .lib-item-header:hover { background: var(--surface2); }
+
+  .lib-item-name { font-size: 13px; font-weight: 500; }
+
+  .lib-badge {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .lb-low { background: var(--green-bg); color: var(--green); }
+  .lb-med { background: var(--amber-bg); color: var(--amber); }
+  .lb-high { background: var(--red-bg); color: var(--red); }
+
+  .lib-item-arrow { font-size: 11px; color: var(--muted); transition: transform 0.2s; }
+  .lib-item.open .lib-item-arrow { transform: rotate(180deg); }
+
+  .lib-item-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+    border-top: 0.5px solid transparent;
+  }
+
+  .lib-item.open .lib-item-body {
+    max-height: 600px;
+    border-top-color: var(--border);
+  }
+
+  .lib-item-inner { padding: 12px 14px; }
+
+  .lib-note-row { margin-bottom: 10px; }
+  .lib-note-label { font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-bottom: 4px; }
+  .lib-note-text { font-size: 12px; line-height: 1.6; color: var(--text); }
+
+  .lib-warns { margin-top: 10px; display: flex; flex-direction: column; gap: 5px; }
+
+  .lib-warn { display: flex; gap: 8px; align-items: flex-start; padding: 6px 8px; border-radius: 5px; font-size: 11px; line-height: 1.5; }
+  .lib-warn.high { background: var(--red-bg); color: var(--red); }
+  .lib-warn.med { background: var(--amber-bg); color: var(--amber); }
+  .lib-warn.low { background: var(--green-bg); color: var(--green); }
+  .lib-warn-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .high .lib-warn-dot { background: var(--red); }
+  .med .lib-warn-dot { background: var(--amber); }
+  .low .lib-warn-dot { background: var(--green); }
+
+  .sites-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+
+  .site-card {
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .site-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+
+  .site-name { font-size: 13px; font-weight: 500; }
+
+  .site-grade {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .site-grade.gA { color: var(--green); }
+  .site-grade.gB { color: #3A7A2A; }
+  .site-grade.gC { color: #8A7020; }
+  .site-grade.gD { color: #B05010; }
+  .site-grade.gF { color: var(--red); }
+
+  .site-note { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  .site-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+
+  .site-tag { font-size: 10px; padding: 2px 6px; border-radius: 3px; background: var(--surface2); color: var(--muted); }
+
+  .site-link {
+    font-size: 11px;
+    color: var(--green);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .site-link:hover { text-decoration: underline; }
+
+  .sites-disclaimer {
+    margin-top: 16px;
+    padding: 10px 12px;
+    background: var(--amber-bg);
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--amber);
+    line-height: 1.6;
+  }
+
   .toggle-wrap {
     display: flex;
     align-items: center;
@@ -732,6 +932,32 @@
   <div class="history-grid" id="historyGrid"></div>
 </div>
 
+<div class="expand-section">
+  <button class="expand-toggle" id="libToggle" onclick="toggleExpand('lib')">
+    <span class="toggle-label">
+      Full materials library
+      <span class="toggle-meta">All fibers — notes, warnings, and ratings</span>
+    </span>
+    <span class="expand-arrow" id="libArrow">▼</span>
+  </button>
+  <div class="expand-body" id="libBody">
+    <div class="expand-inner" id="libInner"></div>
+  </div>
+</div>
+
+<div class="expand-section" style="margin-bottom:60px">
+  <button class="expand-toggle" id="sitesToggle" onclick="toggleExpand('sites')">
+    <span class="toggle-label">
+      Brand directory — fabric &amp; sustainability ratings
+      <span class="toggle-meta">A–F grades based on fiber practices and transparency</span>
+    </span>
+    <span class="expand-arrow" id="sitesArrow">▼</span>
+  </button>
+  <div class="expand-body" id="sitesBody">
+    <div class="expand-inner" id="sitesInner"></div>
+  </div>
+</div>
+
 <script>
 const DB = {
   "Cotton (conventional)": {
@@ -739,6 +965,7 @@ const DB = {
     chem:"High", osm:"Medium", env:"High",
     chemNotes:"Formaldehyde, chlorine bleach, AZO dyes, pesticide residue",
     osmNotes:"AZO dyes absorb on skin contact; formaldehyde off-gasses from surface",
+    envNotes:"10,000L water per kg of fabric; heavy pesticide and fertilizer use in farming; chlorine bleach pollutes waterways during processing",
     warns:[
       {level:"high", text:"Wash before first wear to reduce formaldehyde and dye residue"},
       {level:"high", text:"Avoid 'wrinkle-free' or 'easy care' labels — heavy formaldehyde treatment"},
@@ -751,6 +978,7 @@ const DB = {
     chem:"Medium", osm:"Low", env:"Medium",
     chemNotes:"No synthetic pesticides in farming; dyes and finishes still vary unless GOTS certified",
     osmNotes:"Significantly lower chemical residue than conventional; GOTS certified = very low risk",
+    envNotes:"Still uses significant water (~same irrigation as conventional). Lower carbon footprint, zero pesticide runoff. Better but not a zero-impact option.",
     warns:[
       {level:"med", text:"'Organic cotton' label alone doesn't guarantee clean dyes"},
       {level:"low", text:"Look for GOTS or OEKO-TEX Standard 100 certification for full chain verification"}
@@ -761,6 +989,7 @@ const DB = {
     chem:"Low", osm:"Low", env:"Medium",
     chemNotes:"GOTS certification covers the full supply chain — farming AND processing including dyes. No AZO dyes, no formaldehyde, no chlorine bleach permitted. OEKO-TEX Standard 100 tests the finished fabric for over 100 harmful substances",
     osmNotes:"Lowest chemical residue of any cotton option. GOTS max formaldehyde threshold is 16mg/kg vs 75mg/kg for conventional European clothing. Very low skin exposure risk",
+    envNotes:"Still uses significant water in farming, but no synthetic pesticide or fertilizer runoff. GOTS covers dyeing and finishing — full chain accountability.",
     warns:[
       {level:"low", text:"Still uses significant water in farming — environmental footprint is better but not zero"},
       {level:"low", text:"Verify the actual certification number on the brand's website — GOTS logos can be faked"},
@@ -772,6 +1001,7 @@ const DB = {
     chem:"Low", osm:"Low", env:"Low",
     chemNotes:"Minimal processing needed; European linen uses cleaner water/dew retting by default",
     osmNotes:"Very low risk; naturally hypoallergenic; minimal dye load due to natural texture",
+    envNotes:"No irrigation needed; flax grows in poor soil; can rehabilitate polluted soil; high carbon absorption. One of the cleanest fibers in existence.",
     warns:[
       {level:"low", text:"Non-European linen may use chemical retting — less regulated"},
       {level:"low", text:"'Linen blend' on a label often means linen + polyester — check content"}
@@ -782,6 +1012,7 @@ const DB = {
     chem:"Low", osm:"Low", env:"Medium",
     chemNotes:"Naturally antimicrobial; no synthetic finishing required; some brands apply moth-proofing",
     osmNotes:"Very low; natural protein fiber is skin-compatible; any itchiness is mechanical, not chemical",
+    envNotes:"Biodegradable and extremely durable — a wool garment worn for 20 years has a fraction of the impact of fast fashion. Concern: methane from sheep and land use for grazing.",
     warns:[
       {level:"med", text:"Check for mulesing-free and ZQ or RWS certification for animal welfare"},
       {level:"low", text:"Some brands apply synthetic moth-proofing treatments — ask before buying"}
@@ -792,6 +1023,7 @@ const DB = {
     chem:"Low", osm:"Low", env:"Medium",
     chemNotes:"Clean profile; Superwash treatment (for machine-washable merino) adds chlorine or polymer coating",
     osmNotes:"Very fine fibers; excellent skin comfort; Superwash polymer coating is low but non-zero exposure",
+    envNotes:"Same as wool when untreated. Superwash polymer coating makes the garment non-biodegradable — treated merino is functionally a synthetic-coated natural fiber at end of life.",
     warns:[
       {level:"med", text:"'Machine washable' merino almost always means Superwash treated — adds plastic polymer coating"},
       {level:"med", text:"Superwash treatment means the garment is no longer fully biodegradable"},
@@ -803,6 +1035,7 @@ const DB = {
     chem:"Low", osm:"Low", env:"Medium",
     chemNotes:"Natural protein fiber; minimal processing; dye process is the main variable",
     osmNotes:"Extremely fine, soft fibers; very low skin irritation or absorption risk",
+    envNotes:"The fiber itself is biodegradable and low-processing. The real issue is overgrazing — cashmere goat populations in Mongolia have increased 10x since the 1990s, causing severe land desertification.",
     warns:[
       {level:"high", text:"Cashmere goat overgrazing is causing serious desertification in Mongolia and China"},
       {level:"med", text:"Cheap cashmere signals poor fiber quality and unverified sourcing"},
@@ -814,6 +1047,7 @@ const DB = {
     chem:"Low", osm:"Low", env:"Low",
     chemNotes:"Grows without pesticides or fertilizers; minimal processing needed; very similar to linen",
     osmNotes:"Very low risk; no known skin sensitizers in properly processed hemp",
+    envNotes:"Arguably the most sustainable fiber crop — sequesters carbon while growing, regenerates soil, uses a fraction of cotton's water, requires no pesticides.",
     warns:[
       {level:"low", text:"Often feels coarse unless blended with cotton or linen"},
       {level:"low", text:"Limited supply due to historical farming restrictions in parts of the US"}
@@ -824,6 +1058,7 @@ const DB = {
     chem:"Low", osm:"Low", env:"Medium",
     chemNotes:"Minimal chemical processing required; protein-based fiber; dyes well with low chemical load",
     osmNotes:"Hypoallergenic protein fiber; naturally compatible with skin",
+    envNotes:"Biodegradable and low water/chemical use in production. Main concern is animal welfare — silkworms are killed in conventional mulberry silk production.",
     warns:[
       {level:"med", text:"Animal welfare concern — silkworms are killed in conventional silk production"},
       {level:"low", text:"Peace/Ahimsa silk exists as an ethical alternative"}
@@ -834,6 +1069,7 @@ const DB = {
     chem:"Low", osm:"Low", env:"Low",
     chemNotes:"Sustainably sourced beech trees (PEFC certified); eco-friendly bleaching; 10–20x less water than conventional cotton",
     osmNotes:"Finished fabric safe; OEKO-TEX Standard 100 certified in most cases; no harmful residual chemicals",
+    envNotes:"Uses 10-20x less water than conventional cotton; sustainably sourced PEFC-certified beech forests; biodegradable finished fabric; one of the better semi-synthetic options.",
     warns:[
       {level:"med", text:"Generic 'modal' is a completely different and dirtier product — verify Lenzing or TENCEL branding"},
       {level:"low", text:"Soft and drapey; excellent for close-skin garments"}
@@ -844,6 +1080,7 @@ const DB = {
     chem:"Medium", osm:"Low", env:"Medium",
     chemNotes:"Beech wood pulp dissolved in chemicals including carbon disulfide; chemical recovery varies by manufacturer",
     osmNotes:"Finished fabric generally safe for skin; processing chemicals don't typically remain at harmful levels",
+    envNotes:"Better than cotton on water use but sustainability entirely depends on manufacturer. Without closed-loop certification, chemicals discharge into waterways.",
     warns:[
       {level:"high", text:"Generic 'modal' with no brand identifier may use the same dirty process as conventional viscose"},
       {level:"med", text:"Sustainability and chemical safety depend entirely on the manufacturer — no way to verify without certification"}
@@ -854,6 +1091,7 @@ const DB = {
     chem:"Low", osm:"Low", env:"Low",
     chemNotes:"Closed-loop system recovers 99%+ of solvents; non-toxic amine oxide solvent recaptured and reused",
     osmNotes:"Very low finished fabric risk; OEKO-TEX certified; no residual harmful chemicals",
+    envNotes:"Best-in-class for semi-synthetics. Closed-loop manufacturing, sustainably sourced eucalyptus, biodegradable, and uses 20-50% less water than conventional cotton.",
     warns:[
       {level:"low", text:"Tencel is the Lenzing brand name; generic lyocell quality varies — look for Lenzing or certification"},
       {level:"low", text:"Don't confuse Tencel Lyocell and Tencel Modal — they are different manufacturing processes"}
@@ -864,6 +1102,7 @@ const DB = {
     chem:"High", osm:"Low", env:"High",
     chemNotes:"Carbon disulfide used to dissolve wood pulp — highly toxic to workers; chemicals typically not recovered",
     osmNotes:"Finished fabric generally low risk for wearer; concern is manufacturing workers and surrounding environment",
+    envNotes:"High chemical discharge into waterways; high water use; forests often not sustainably certified; chemical-heavy process with no recovery loop.",
     warns:[
       {level:"high", text:"One of the worst semi-synthetic options for worker safety and environmental impact"},
       {level:"high", text:"Often marketed with vague 'natural' language — it is not natural in processing"},
@@ -875,6 +1114,7 @@ const DB = {
     chem:"High", osm:"Low", env:"High",
     chemNotes:"Bamboo soft fabric is made via the viscose process — same carbon disulfide chemistry, not mechanical",
     osmNotes:"Finished fabric low risk for wearer, same profile as viscose; concern is manufacturing",
+    envNotes:"Bamboo the plant is very sustainable. Bamboo fabric the product is not — the viscose manufacturing process strips all those environmental benefits away.",
     warns:[
       {level:"high", text:"Classic greenwashing — the bamboo plant is sustainable but the manufacturing process is not"},
       {level:"high", text:"FTC has sued brands for mislabeling bamboo viscose as simply 'bamboo'"},
@@ -886,6 +1126,7 @@ const DB = {
     chem:"High", osm:"Medium", env:"High",
     chemNotes:"Almost always 100% polyester — petroleum-based; may contain PFAS coatings for moisture management",
     osmNotes:"Microplastics shed from fleece surface with every wash and through skin abrasion; PFAS can absorb transdermally",
+    envNotes:"One of the worst microplastic polluters — releases hundreds of thousands of plastic fibers per wash cycle that pass through wastewater treatment into waterways and oceans.",
     warns:[
       {level:"high", text:"One of the worst microplastic shedders — releases hundreds of thousands of fibers per wash"},
       {level:"high", text:"Marketed as cozy and natural-feeling but is 100% plastic"},
@@ -898,6 +1139,7 @@ const DB = {
     chem:"High", osm:"Medium", env:"High",
     chemNotes:"Petroleum-based plastic; manufactured with toxic chemicals; PFAS coatings common for water resistance",
     osmNotes:"Microplastics shed from surface and inhaled or absorbed; PFAS from coatings absorb transdermally; traps heat and moisture",
+    envNotes:"Non-biodegradable (20-200 years to break down); petroleum sourced; sheds microplastics every wash; over 50% of all textiles produced globally are polyester.",
     warns:[
       {level:"high", text:"Non-biodegradable — takes 20 to 200 years to break down"},
       {level:"high", text:"Microplastics from polyester clothing found in human blood and breast milk"},
@@ -910,6 +1152,7 @@ const DB = {
     chem:"High", osm:"Medium", env:"High",
     chemNotes:"Petroleum-based; adipic acid production emits significant N2O; often treated with PFAS in activewear",
     osmNotes:"Similar to polyester — microplastic shedding; PFAS absorption potential; common in tights and swimwear",
+    envNotes:"N2O emissions from production are 300x more potent than CO2. Non-biodegradable. Microplastic shedder. ECONYL (recycled nylon from fishing nets) is the best alternative.",
     warns:[
       {level:"high", text:"N2O (nitrous oxide) emissions from nylon production are 300x more potent than CO2"},
       {level:"med", text:"Common in activewear and swimwear — high skin contact area + PFAS risk combination"},
@@ -921,6 +1164,7 @@ const DB = {
     chem:"High", osm:"Medium", env:"High",
     chemNotes:"Petroleum-based polyurethane; always synthetic; heat-activated off-gassing in small amounts; PFAS sometimes added",
     osmNotes:"Sits against skin constantly in form-fitting garments; heat-activated off-gassing; small but persistent exposure",
+    envNotes:"Even in tiny amounts (2-5%) it makes a garment non-biodegradable. A 98% linen 2% elastane shirt cannot break down naturally and cannot be composted.",
     warns:[
       {level:"high", text:"Even 2–5% elastane means the garment is not biodegradable — it contaminates otherwise natural fibers"},
       {level:"high", text:"Prevents composting or natural breakdown of blended 'natural fiber' garments"},
@@ -933,6 +1177,7 @@ const DB = {
     chem:"High", osm:"Medium", env:"High",
     chemNotes:"Made from acrylonitrile — a known carcinogen; energy-intensive production",
     osmNotes:"Microfiber shedding into air and skin contact; acrylonitrile residue possible in cheaper manufacturing",
+    envNotes:"Produces 21.1kg CO2 per kg — highest of any textile fiber. Pills aggressively, meaning short lifespan and high replacement rate. Heavy microplastic shedder. Nothing redeemable environmentally.",
     warns:[
       {level:"high", text:"Acrylonitrile used in production is classified as a probable human carcinogen"},
       {level:"high", text:"Pills aggressively from first use — very short lifespan despite high environmental cost"},
@@ -1002,7 +1247,13 @@ function showFiberInfo() {
   `;
 }
 
-document.getElementById("fiberSelect").addEventListener("change", showFiberInfo);
+document.getElementById("fiberSelect").addEventListener("change", () => {
+  showFiberInfo();
+  const rem = 100 - totalPct();
+  if (rem > 0 && rem < 100) {
+    document.getElementById("pctInput").value = rem;
+  }
+});
 
 function totalPct() { return garment.reduce((s,f) => s + f.pct, 0); }
 
@@ -1267,6 +1518,254 @@ function renderHistory() {
       <div class="hc-timestamp">${h.time}</div>
     </div>`;
   }).join("");
+}
+
+const SITES = [
+  {
+    name: "Harvest & Mill",
+    url: "https://harvestandmill.com",
+    grade: "A",
+    note: "100% organic cotton, seed to stitch in the USA. No synthetic dyes, no synthetic fibers, zero polyester. One of the most transparent supply chains available.",
+    tags: ["100% organic cotton", "USA made", "GOTS", "no synthetics"]
+  },
+  {
+    name: "Cottonique",
+    url: "https://cottonique.com",
+    grade: "A",
+    note: "Allergy-free organic cotton clothing. Everything including thread, elastic, and labels is natural. B-Corp certified factory in the Philippines.",
+    tags: ["100% organic cotton", "allergy-free", "B-Corp", "no elastane"]
+  },
+  {
+    name: "Pact",
+    url: "https://wearpact.com",
+    grade: "A",
+    note: "GOTS certified organic cotton across their full line. Fair Trade certified factories. Good range of basics and loungewear at accessible price points.",
+    tags: ["GOTS certified", "Fair Trade", "organic cotton", "accessible price"]
+  },
+  {
+    name: "Allwear",
+    url: "https://allwear.com",
+    grade: "A",
+    note: "OEKO-TEX and GOTS certified. No polyester, no nylon, no AZO dyes, no formaldehyde. Uses organic cotton and closed-loop bamboo lyocell (Tanboocel). Minor caveat: 5–8% BPA-free elastane in select fitted items.",
+    tags: ["GOTS", "OEKO-TEX", "no polyester", "no nylon", "AZO-free dyes"]
+  },
+  {
+    name: "MagicLinen",
+    url: "https://magiclinen.com",
+    grade: "A",
+    note: "100% European linen, family-owned, made in Lithuania in small batches. OEKO-TEX certified. Stonewashed for softness out of the box. One of the best linen-only brands.",
+    tags: ["100% linen", "OEKO-TEX", "European flax", "small batch"]
+  },
+  {
+    name: "Fair Indigo",
+    url: "https://www.fairindigo.com",
+    grade: "A",
+    note: "Uses top-grade organic Peruvian Pima cotton. No spandex — mechanical stretch only. Fair Trade certified. One of the few brands that achieves stretch without elastane.",
+    tags: ["Pima cotton", "no elastane", "Fair Trade", "organic"]
+  },
+  {
+    name: "Old Linen Mill",
+    url: "https://oldlinenmill.com",
+    grade: "A",
+    note: "100% European linen only. Wide range of jacket and cardigan styles. Coconut shell buttons, not plastic. Good for the casual indoor jacket use case.",
+    tags: ["100% linen", "European flax", "natural buttons", "jackets"]
+  },
+  {
+    name: "Eileen Fisher",
+    url: "https://www.eileenfisher.com",
+    grade: "B",
+    note: "Strong commitment to organic linen, organic cotton, and Tencel. Some blends include elastane — check labels. Take-back program for worn garments.",
+    tags: ["organic linen", "Tencel", "organic cotton", "check blends"]
+  },
+  {
+    name: "Reformation",
+    url: "https://www.thereformation.com",
+    grade: "B",
+    note: "100% linen and Tencel options widely available and clearly labeled. Some items include synthetics — always check the full fabric content. Strong sustainability transparency.",
+    tags: ["linen", "Tencel", "transparent sourcing", "check blends"]
+  },
+  {
+    name: "Naadam",
+    url: "https://naadam.co",
+    grade: "B",
+    note: "Direct-sourced Mongolian cashmere and organic cotton. Excellent transparency on supply chain. Some items include small % elastane — verify per product.",
+    tags: ["cashmere", "organic cotton", "direct sourcing", "check elastane"]
+  },
+  {
+    name: "Quince",
+    url: "https://www.quince.com",
+    grade: "B",
+    note: "Luxury materials at low prices — 100% linen, cashmere, and Tencel options available. Quality is genuinely good. Some items include synthetics; always read the label.",
+    tags: ["linen", "cashmere", "Tencel", "affordable", "check blends"]
+  },
+  {
+    name: "GOBI Cashmere",
+    url: "https://www.gobicashmere.com",
+    grade: "B",
+    note: "100% Mongolian cashmere made in Mongolia. Traceable sourcing with SFA certification. Wide range of styles including casual jackets and loungewear.",
+    tags: ["100% cashmere", "SFA certified", "Mongolia made"]
+  },
+  {
+    name: "Kujten",
+    url: "https://www.kujten.com",
+    grade: "B",
+    note: "Designed in Paris, made in Mongolia. 100% cashmere jackets, cardigans, and sweaters in natural colorways. Higher price point but genuinely clean fiber profile.",
+    tags: ["100% cashmere", "Mongolia made", "luxury", "casual-chic"]
+  },
+  {
+    name: "American Eagle / Aerie",
+    url: "https://www.ae.com",
+    grade: "C",
+    note: "Cotton makes up 59% of materials, with 67% now from sustainable sources. Modal and cotton blends (like the Aerie shorts) are reasonable picks. Broadly still uses synthetics — 'Real Good' badge items are better choices. Read every label.",
+    tags: ["check Real Good badge", "cotton-heavy", "modal options", "mixed synthetics"]
+  },
+  {
+    name: "Banana Republic",
+    url: "https://bananarepublic.gap.com",
+    grade: "D",
+    note: "Has organic cotton and Tencel individual items, but the majority of the line is conventional cotton and polyester. Only 5.9% of synthetics from recycled sources as of last report. The 'Conscious Luxury' filter on their site is your starting point.",
+    tags: ["check labels closely", "some organic cotton", "some Tencel", "majority conventional"]
+  },
+  {
+    name: "Aritzia",
+    url: "https://www.aritzia.com",
+    grade: "D",
+    note: "Synthetic fiber use increased from 36% to 44% between 2021 and 2022. Most pieces are polyester, viscose, or synthetic blends despite premium pricing. TENCEL and organic cotton items exist but are a small minority. Good On You rates them 'Not Good Enough.'",
+    tags: ["majority synthetic", "check for TENCEL items", "misleading premium image", "read every label"]
+  },
+  {
+    name: "Free People",
+    url: "https://www.freepeople.com",
+    grade: "D",
+    note: "Uses polyester, acrylic, and nylon throughout most lines. Fashion Transparency Index scored them 1/100 on supply chain transparency. Their 'Care FP' eco line requires at least 50% certifiable eco material — the only section worth shopping.",
+    tags: ["mostly synthetic", "check Care FP line only", "very low transparency", "boho aesthetic masks poor fabric"]
+  },
+  {
+    name: "Victoria's Secret",
+    url: "https://www.victoriassecret.com",
+    grade: "D",
+    note: "Under 30% of materials are lower-impact fibers. Majority is conventional cotton, virgin polyester, polyamide, and elastane. No meaningful reduction targets published. Their Lenzing TENCEL modal items are the exception — check per product.",
+    tags: ["majority synthetic", "check for TENCEL modal items", "no reduction targets", "lingerie = high elastane"]
+  },
+  {
+    name: "Lululemon",
+    url: "https://www.lululemon.com",
+    grade: "F",
+    note: "Nylon is their single largest material by weight. Almost the entire line is polyester, nylon, and spandex. Carbon footprint increased 60% in one year. 'Be Planet' branding is widely cited as greenwashing. Avoid if natural fibers are your goal.",
+    tags: ["nylon dominant", "high synthetic load", "greenwashing concern", "no natural fiber options"]
+  },
+  {
+    name: "Urban Outfitters",
+    url: "https://www.urbanoutfitters.com",
+    grade: "D",
+    note: "Same parent company as Free People (URBN) — same systemic issues. Heavy use of conventional cotton, polyester, and acrylic. Some vintage and deadstock items are better choices. 'Renewal' secondhand section reduces new production impact.",
+    tags: ["mostly synthetic", "check Renewal vintage section", "conventional cotton", "same issues as Free People"]
+  }
+];
+
+const CAT_ORDER = ["Natural fiber", "Semi-synthetic", "Synthetic"];
+const CAT_COLORS = {
+  "Natural fiber": "#2A5C26",
+  "Semi-synthetic": "#8A7020",
+  "Synthetic": "#7A1A1A"
+};
+
+function toggleExpand(id) {
+  const toggle = document.getElementById(id + "Toggle");
+  const body = document.getElementById(id + "Body");
+  const arrow = document.getElementById(id + "Arrow");
+  const isOpen = body.classList.contains("open");
+  if (!isOpen) {
+    if (id === "lib") renderLibrary();
+    if (id === "sites") renderSites();
+  }
+  body.classList.toggle("open", !isOpen);
+  toggle.classList.toggle("open", !isOpen);
+}
+
+function toggleLibItem(idx) {
+  const item = document.getElementById("libitem-" + idx);
+  item.classList.toggle("open");
+}
+
+function renderLibrary() {
+  const el = document.getElementById("libInner");
+  const lvlBadge = l => {
+    const cls = l==="Low"?"lb-low":l==="Medium"?"lb-med":"lb-high";
+    return `<span class="lib-badge ${cls}">${l}</span>`;
+  };
+  let html = "";
+  CAT_ORDER.forEach(cat => {
+    const names = Object.keys(DB).filter(n => DB[n].cat === cat).sort();
+    if (!names.length) return;
+    html += `<div class="lib-category">
+      <div class="lib-cat-title">
+        <div class="lib-cat-dot" style="background:${CAT_COLORS[cat]}"></div>
+        ${cat}s
+      </div>`;
+    names.forEach((name, i) => {
+      const f = DB[name];
+      const idx = cat.slice(0,3) + i;
+      html += `<div class="lib-item" id="libitem-${idx}">
+        <div class="lib-item-header" onclick="toggleLibItem('${idx}')">
+          <span class="lib-item-name">${name}</span>
+          ${lvlBadge(f.chem)}
+          ${lvlBadge(f.osm)}
+          <span class="lib-item-arrow">▼</span>
+        </div>
+        <div class="lib-item-body">
+          <div class="lib-item-inner">
+            <div class="lib-note-row">
+              <div class="lib-note-label">Chemical exposure — ${f.chem}</div>
+              <div class="lib-note-text">${f.chemNotes}</div>
+            </div>
+            <div class="lib-note-row">
+              <div class="lib-note-label">Skin (osmosis) exposure — ${f.osm}</div>
+              <div class="lib-note-text">${f.osmNotes}</div>
+            </div>
+            <div class="lib-note-row">
+              <div class="lib-note-label">Environmental impact — ${f.env}</div>
+              <div class="lib-note-text">${f.envNotes || "See general notes for this category."}</div>
+            </div>
+            <div class="lib-warns">
+              ${f.warns.map(w => `<div class="lib-warn ${w.level}"><div class="lib-warn-dot"></div><span>${w.text}</span></div>`).join("")}
+            </div>
+          </div>
+        </div>
+      </div>`;
+    });
+    html += "</div>";
+  });
+  el.innerHTML = `
+    <div style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;font-size:11px;color:var(--muted)">
+      <span>Column order: <strong style="color:var(--text)">Chemical</strong> · <strong style="color:var(--text)">Skin</strong> — click any row to expand</span>
+    </div>
+    ${html}`;
+}
+
+function renderSites() {
+  const el = document.getElementById("sitesInner");
+  const gradeOrder = {A:0, B:1, C:2, D:3, F:4};
+  const sorted = [...SITES].sort((a,b) => gradeOrder[a.grade] - gradeOrder[b.grade]);
+  const cards = sorted.map(s => `
+    <div class="site-card">
+      <div class="site-top">
+        <div>
+          <div class="site-name">${s.name}</div>
+          <a class="site-link" href="${s.url}" target="_blank">${s.url.replace('https://','').replace('www.','')} ↗</a>
+        </div>
+        <div class="site-grade g${s.grade}">${s.grade}</div>
+      </div>
+      <div class="site-note">${s.note}</div>
+      <div class="site-tags">${s.tags.map(t => `<span class="site-tag">${t}</span>`).join("")}</div>
+    </div>`).join("");
+  el.innerHTML = `
+    <div class="sites-grid">${cards}</div>
+    <div class="sites-disclaimer">
+      Grades based on publicly available fiber practices, certifications, and sustainability reporting — not paid placement. 
+      A/B = consistently good natural fiber options. C = mixed, with good individual picks if you read labels. D = mostly conventional/synthetic with limited clean options. F = avoid for natural fiber goals.
+      Always verify fabric content on the product page before buying — formulations change.
+    </div>`;
 }
 
 populateSelect();
