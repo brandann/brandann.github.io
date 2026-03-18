@@ -739,15 +739,15 @@
 
   .sites-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
 
-  .site-card {
-    border: 0.5px solid var(--border);
-    border-radius: 8px;
-    padding: 14px;
-    background: var(--bg);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
+.site-card {
+  border: 0.5px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--bg);
+  display: flex;          
+  flex-direction: column; 
+  gap: 8px;
+}
 
   .site-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
 
@@ -792,6 +792,323 @@
     font-size: 11px;
     color: var(--amber);
     line-height: 1.6;
+  }
+
+  .comment-section {
+    max-width: 960px;
+    margin: 0 auto 20px;
+    padding: 0 24px;
+  }
+
+  .comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .comment-form {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 14px;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+  }
+
+  .comment-list { display: flex; flex-direction: column; gap: 8px; }
+
+  .comment-item {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    animation: fadeIn 0.2s ease;
+  }
+
+  .comment-body { flex: 1; }
+  .comment-meta { font-size: 11px; color: var(--muted); margin-bottom: 4px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .comment-author { font-weight: 500; color: var(--text); }
+  .comment-text { font-size: 13px; line-height: 1.5; }
+  .comment-del { background: none; border: none; color: var(--border); cursor: pointer; font-size: 16px; padding: 0; line-height: 1; flex-shrink: 0; transition: color 0.15s; }
+  .comment-del:hover { color: var(--red); }
+  .comment-empty { text-align: center; color: var(--muted); font-size: 12px; padding: 20px; }
+
+  .brand-add-btn {
+    padding: 6px 14px;
+    background: var(--text);
+    color: #F5F3EE;
+    border: none;
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .brand-add-btn:hover { opacity: 0.8; }
+
+  .brand-edit-form {
+    background: var(--bg);
+    border-top: 0.5px solid var(--border);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .bef-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .bef-label { font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); font-weight: 500; min-width: 44px; }
+
+  .bef-input {
+    flex: 1;
+    padding: 6px 8px;
+    border: 0.5px solid var(--border);
+    border-radius: 5px;
+    background: var(--surface);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    min-width: 0;
+  }
+
+  .bef-input:focus { outline: none; border-color: var(--accent); }
+
+  .bef-textarea {
+    flex: 1;
+    padding: 6px 8px;
+    border: 0.5px solid var(--border);
+    border-radius: 5px;
+    background: var(--surface);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  .bef-textarea:focus { outline: none; border-color: var(--accent); }
+
+  .bef-grade-select {
+    padding: 6px 8px;
+    border: 0.5px solid var(--border);
+    border-radius: 5px;
+    background: var(--surface);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    width: 70px;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .bef-grade-select:focus { outline: none; border-color: var(--accent); }
+
+  .tag-editor { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; flex: 1; }
+
+  .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: var(--surface2);
+    color: var(--muted);
+  }
+
+  .tag-pill button {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .tag-pill button:hover { color: var(--red); }
+
+  .tag-input-wrap { position: relative; }
+
+  .tag-suggest {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 6px;
+    min-width: 180px;
+    max-height: 140px;
+    overflow-y: auto;
+  }
+
+  .tag-suggest-item {
+    padding: 6px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--text);
+  }
+
+  .tag-suggest-item:hover { background: var(--bg); }
+
+  .bef-actions { display: flex; gap: 8px; justify-content: flex-end; padding-top: 4px; }
+
+  .bef-save {
+    padding: 6px 14px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-family: var(--mono);
+    font-size: 11px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .bef-save:hover { opacity: 0.85; }
+
+  .bef-cancel {
+    padding: 6px 14px;
+    background: none;
+    border: 0.5px solid var(--border);
+    border-radius: 5px;
+    font-family: var(--mono);
+    font-size: 11px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+
+  .bef-cancel:hover { border-color: var(--muted); color: var(--text); }
+
+  .bef-delete {
+    padding: 6px 14px;
+    background: none;
+    border: 0.5px solid var(--border);
+    border-radius: 5px;
+    font-family: var(--mono);
+    font-size: 11px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+    margin-right: auto;
+  }
+
+  .bef-delete:hover { border-color: var(--red); color: var(--red); }
+
+.site-card .edit-toggle {
+  width: 75px;
+  padding: 6px 0;
+  background: none;
+  border: 0.5px solid var(--border);
+  border-radius: 5px;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 11px;
+  font-family: var(--mono);
+  transition: all 0.15s;
+  letter-spacing: 0.05em;
+  align-self: flex-end;
+  margin-top: auto;
+}
+
+  .site-card .edit-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeInOverlay 0.15s ease;
+  }
+
+  @keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal-box {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 14px;
+    width: 100%;
+    max-width: 540px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUpModal 0.18s ease;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+  }
+
+  @keyframes slideUpModal { from { transform: translateY(16px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px 12px;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .modal-title { font-size: 13px; font-weight: 500; }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--muted);
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 2px;
+    transition: color 0.15s;
+  }
+
+  .modal-close:hover { color: var(--text); }
+
+  .modal-body { padding: 16px 20px 20px; }
+
+  .gas-status {
+    font-size: 11px;
+    color: var(--muted);
+    padding: 0 4px;
+  }
+
+  .gas-status.error { color: var(--red); }
+  .gas-status.ok { color: var(--green); }
+
+  .add-brand-form {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .add-brand-form.visible { display: block; }
+  .add-brand-form .form-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .sites-loading {
+    text-align: center;
+    padding: 30px;
+    color: var(--muted);
+    font-size: 12px;
   }
 
   .toggle-wrap {
@@ -932,6 +1249,27 @@
   <div class="history-grid" id="historyGrid"></div>
 </div>
 
+<div class="expand-section" id="commentSection">
+  <button class="expand-toggle" id="commentsToggle" onclick="toggleExpand('comments')">
+    <span class="toggle-label">
+      Community notes
+      <span class="toggle-meta">Tips, corrections, and brand experiences</span>
+    </span>
+    <span class="history-count" id="commentCount" style="margin-right:4px">0</span>
+    <span class="expand-arrow" id="commentsArrow">▼</span>
+  </button>
+  <div class="expand-body" id="commentsBody">
+    <div class="expand-inner">
+      <div class="comment-form">
+        <input type="text" id="commentAuthor" placeholder="Your name (optional)" style="width:200px;margin-right:8px">
+        <input type="text" id="commentText" placeholder="Add a note, tip, or correction..." style="flex:1;min-width:200px" onkeydown="if(event.key==='Enter')submitComment()">
+        <button class="add-btn" onclick="submitComment()" id="commentSubmitBtn" style="height:36px;white-space:nowrap">Post</button>
+      </div>
+      <div id="commentList" class="comment-list"></div>
+    </div>
+  </div>
+</div>
+
 <div class="expand-section">
   <button class="expand-toggle" id="libToggle" onclick="toggleExpand('lib')">
     <span class="toggle-label">
@@ -951,10 +1289,53 @@
       Brand directory — fabric &amp; sustainability ratings
       <span class="toggle-meta">A–F grades based on fiber practices and transparency</span>
     </span>
-    <span class="expand-arrow" id="sitesArrow">▼</span>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span class="gas-status" id="gasStatus"></span>
+      <span class="expand-arrow" id="sitesArrow">▼</span>
+    </div>
   </button>
   <div class="expand-body" id="sitesBody">
-    <div class="expand-inner" id="sitesInner"></div>
+    <div class="expand-inner">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <input type="text" id="brandSearch" placeholder="Search brands or tags…" oninput="renderSites()" style="flex:1;min-width:180px;max-width:320px;padding:6px 10px;border:0.5px solid var(--border);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-family:var(--mono);font-size:13px;outline:none">
+        <button class="brand-add-btn" onclick="toggleAddForm()">+ Add brand</button>
+      </div>
+      <div class="add-brand-form" id="addBrandForm">
+        <div class="form-title">New brand</div>
+        <div class="brand-edit-form" style="border:none;padding:0;background:none">
+          <div class="bef-row"><span class="bef-label">Name</span><input class="bef-input" id="nb-name" placeholder="Brand name"></div>
+          <div class="bef-row"><span class="bef-label">URL</span><input class="bef-input" id="nb-url" placeholder="https://..."></div>
+          <div class="bef-row">
+            <span class="bef-label">Grade</span>
+            <select class="bef-grade-select" id="nb-grade">
+              <option>A</option><option>B</option><option selected>C</option><option>D</option><option>F</option>
+            </select>
+          </div>
+          <div class="bef-row"><span class="bef-label">Note</span><textarea class="bef-textarea" id="nb-note" placeholder="Description and notes..."></textarea></div>
+          <div class="bef-row">
+            <span class="bef-label">Tags</span>
+            <div class="tag-editor" id="nb-tags-editor"></div>
+          </div>
+          <div class="bef-row">
+            <span class="bef-label"></span>
+            <div class="tag-input-wrap">
+              <input class="bef-input" id="nb-tag-input" placeholder="Add tag..." oninput="filterTagSuggest('nb')" onkeydown="tagInputKey(event,'nb')" style="width:140px" autocomplete="off">
+              <div class="tag-suggest" id="nb-tag-suggest" style="display:none"></div>
+            </div>
+          </div>
+          <div class="bef-actions">
+            <button class="bef-cancel" onclick="toggleAddForm()">Cancel</button>
+            <button class="bef-save" onclick="submitNewBrand()">Save brand</button>
+          </div>
+        </div>
+      </div>
+      <div id="sitesInner"><div class="sites-loading">Loading brands…</div></div>
+      <div class="sites-disclaimer" id="sitesDisclaimer" style="display:none">
+        Grades based on publicly available fiber practices, certifications, and sustainability reporting — not paid placement.
+        A/B = consistently good natural fiber options. C = mixed, with good individual picks if you read labels. D = mostly conventional/synthetic with limited clean options. F = avoid for natural fiber goals.
+        Always verify fabric content on the product page before buying — formulations change.
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1147,14 +1528,15 @@ const DB = {
       {level:"med", text:"Recycled polyester (rPET) reduces carbon but still sheds identical microplastics"}
     ]
   },
-  "Nylon": {
+  "Nylon (Polyamide)": {
     cat:"Synthetic",
     chem:"High", osm:"Medium", env:"High",
-    chemNotes:"Petroleum-based; adipic acid production emits significant N2O; often treated with PFAS in activewear",
+    chemNotes:"Petroleum-based; adipic acid production emits significant N2O; often treated with PFAS in activewear. Also sold as Polyamide — same material, different name used more commonly in Europe.",
     osmNotes:"Similar to polyester — microplastic shedding; PFAS absorption potential; common in tights and swimwear",
     envNotes:"N2O emissions from production are 300x more potent than CO2. Non-biodegradable. Microplastic shedder. ECONYL (recycled nylon from fishing nets) is the best alternative.",
     warns:[
       {level:"high", text:"N2O (nitrous oxide) emissions from nylon production are 300x more potent than CO2"},
+      {level:"high", text:"Sold as 'Polyamide' on European labels — same petroleum-based plastic, different name"},
       {level:"med", text:"Common in activewear and swimwear — high skin contact area + PFAS risk combination"},
       {level:"low", text:"ECONYL (recycled nylon from fishing nets) is a substantially cleaner alternative"}
     ]
@@ -1520,148 +1902,434 @@ function renderHistory() {
   }).join("");
 }
 
-const SITES = [
-  {
-    name: "Harvest & Mill",
-    url: "https://harvestandmill.com",
-    grade: "A",
-    note: "100% organic cotton, seed to stitch in the USA. No synthetic dyes, no synthetic fibers, zero polyester. One of the most transparent supply chains available.",
-    tags: ["100% organic cotton", "USA made", "GOTS", "no synthetics"]
-  },
-  {
-    name: "Cottonique",
-    url: "https://cottonique.com",
-    grade: "A",
-    note: "Allergy-free organic cotton clothing. Everything including thread, elastic, and labels is natural. B-Corp certified factory in the Philippines.",
-    tags: ["100% organic cotton", "allergy-free", "B-Corp", "no elastane"]
-  },
-  {
-    name: "Pact",
-    url: "https://wearpact.com",
-    grade: "A",
-    note: "GOTS certified organic cotton across their full line. Fair Trade certified factories. Good range of basics and loungewear at accessible price points.",
-    tags: ["GOTS certified", "Fair Trade", "organic cotton", "accessible price"]
-  },
-  {
-    name: "Allwear",
-    url: "https://allwear.com",
-    grade: "A",
-    note: "OEKO-TEX and GOTS certified. No polyester, no nylon, no AZO dyes, no formaldehyde. Uses organic cotton and closed-loop bamboo lyocell (Tanboocel). Minor caveat: 5–8% BPA-free elastane in select fitted items.",
-    tags: ["GOTS", "OEKO-TEX", "no polyester", "no nylon", "AZO-free dyes"]
-  },
-  {
-    name: "MagicLinen",
-    url: "https://magiclinen.com",
-    grade: "A",
-    note: "100% European linen, family-owned, made in Lithuania in small batches. OEKO-TEX certified. Stonewashed for softness out of the box. One of the best linen-only brands.",
-    tags: ["100% linen", "OEKO-TEX", "European flax", "small batch"]
-  },
-  {
-    name: "Fair Indigo",
-    url: "https://www.fairindigo.com",
-    grade: "A",
-    note: "Uses top-grade organic Peruvian Pima cotton. No spandex — mechanical stretch only. Fair Trade certified. One of the few brands that achieves stretch without elastane.",
-    tags: ["Pima cotton", "no elastane", "Fair Trade", "organic"]
-  },
-  {
-    name: "Old Linen Mill",
-    url: "https://oldlinenmill.com",
-    grade: "A",
-    note: "100% European linen only. Wide range of jacket and cardigan styles. Coconut shell buttons, not plastic. Good for the casual indoor jacket use case.",
-    tags: ["100% linen", "European flax", "natural buttons", "jackets"]
-  },
-  {
-    name: "Eileen Fisher",
-    url: "https://www.eileenfisher.com",
-    grade: "B",
-    note: "Strong commitment to organic linen, organic cotton, and Tencel. Some blends include elastane — check labels. Take-back program for worn garments.",
-    tags: ["organic linen", "Tencel", "organic cotton", "check blends"]
-  },
-  {
-    name: "Reformation",
-    url: "https://www.thereformation.com",
-    grade: "B",
-    note: "100% linen and Tencel options widely available and clearly labeled. Some items include synthetics — always check the full fabric content. Strong sustainability transparency.",
-    tags: ["linen", "Tencel", "transparent sourcing", "check blends"]
-  },
-  {
-    name: "Naadam",
-    url: "https://naadam.co",
-    grade: "B",
-    note: "Direct-sourced Mongolian cashmere and organic cotton. Excellent transparency on supply chain. Some items include small % elastane — verify per product.",
-    tags: ["cashmere", "organic cotton", "direct sourcing", "check elastane"]
-  },
-  {
-    name: "Quince",
-    url: "https://www.quince.com",
-    grade: "B",
-    note: "Luxury materials at low prices — 100% linen, cashmere, and Tencel options available. Quality is genuinely good. Some items include synthetics; always read the label.",
-    tags: ["linen", "cashmere", "Tencel", "affordable", "check blends"]
-  },
-  {
-    name: "GOBI Cashmere",
-    url: "https://www.gobicashmere.com",
-    grade: "B",
-    note: "100% Mongolian cashmere made in Mongolia. Traceable sourcing with SFA certification. Wide range of styles including casual jackets and loungewear.",
-    tags: ["100% cashmere", "SFA certified", "Mongolia made"]
-  },
-  {
-    name: "Kujten",
-    url: "https://www.kujten.com",
-    grade: "B",
-    note: "Designed in Paris, made in Mongolia. 100% cashmere jackets, cardigans, and sweaters in natural colorways. Higher price point but genuinely clean fiber profile.",
-    tags: ["100% cashmere", "Mongolia made", "luxury", "casual-chic"]
-  },
-  {
-    name: "American Eagle / Aerie",
-    url: "https://www.ae.com",
-    grade: "C",
-    note: "Cotton makes up 59% of materials, with 67% now from sustainable sources. Modal and cotton blends (like the Aerie shorts) are reasonable picks. Broadly still uses synthetics — 'Real Good' badge items are better choices. Read every label.",
-    tags: ["check Real Good badge", "cotton-heavy", "modal options", "mixed synthetics"]
-  },
-  {
-    name: "Banana Republic",
-    url: "https://bananarepublic.gap.com",
-    grade: "D",
-    note: "Has organic cotton and Tencel individual items, but the majority of the line is conventional cotton and polyester. Only 5.9% of synthetics from recycled sources as of last report. The 'Conscious Luxury' filter on their site is your starting point.",
-    tags: ["check labels closely", "some organic cotton", "some Tencel", "majority conventional"]
-  },
-  {
-    name: "Aritzia",
-    url: "https://www.aritzia.com",
-    grade: "D",
-    note: "Synthetic fiber use increased from 36% to 44% between 2021 and 2022. Most pieces are polyester, viscose, or synthetic blends despite premium pricing. TENCEL and organic cotton items exist but are a small minority. Good On You rates them 'Not Good Enough.'",
-    tags: ["majority synthetic", "check for TENCEL items", "misleading premium image", "read every label"]
-  },
-  {
-    name: "Free People",
-    url: "https://www.freepeople.com",
-    grade: "D",
-    note: "Uses polyester, acrylic, and nylon throughout most lines. Fashion Transparency Index scored them 1/100 on supply chain transparency. Their 'Care FP' eco line requires at least 50% certifiable eco material — the only section worth shopping.",
-    tags: ["mostly synthetic", "check Care FP line only", "very low transparency", "boho aesthetic masks poor fabric"]
-  },
-  {
-    name: "Victoria's Secret",
-    url: "https://www.victoriassecret.com",
-    grade: "D",
-    note: "Under 30% of materials are lower-impact fibers. Majority is conventional cotton, virgin polyester, polyamide, and elastane. No meaningful reduction targets published. Their Lenzing TENCEL modal items are the exception — check per product.",
-    tags: ["majority synthetic", "check for TENCEL modal items", "no reduction targets", "lingerie = high elastane"]
-  },
-  {
-    name: "Lululemon",
-    url: "https://www.lululemon.com",
-    grade: "F",
-    note: "Nylon is their single largest material by weight. Almost the entire line is polyester, nylon, and spandex. Carbon footprint increased 60% in one year. 'Be Planet' branding is widely cited as greenwashing. Avoid if natural fibers are your goal.",
-    tags: ["nylon dominant", "high synthetic load", "greenwashing concern", "no natural fiber options"]
-  },
-  {
-    name: "Urban Outfitters",
-    url: "https://www.urbanoutfitters.com",
-    grade: "D",
-    note: "Same parent company as Free People (URBN) — same systemic issues. Heavy use of conventional cotton, polyester, and acrylic. Some vintage and deadstock items are better choices. 'Renewal' secondhand section reduces new production impact.",
-    tags: ["mostly synthetic", "check Renewal vintage section", "conventional cotton", "same issues as Free People"]
+// ── GOOGLE SHEETS CONFIG ────────────────────────────────────
+// After deploying the Apps Script, paste the web app URL here:
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxNM864N1wQMUxDKHbKA40sGXlUMWP_GCvJQ2ALuaTfpk3nRxt9SUCeXG2RNH1zU71-7g/exec';
+
+let brands = [];
+let comments = [];
+let newBrandTags = [];
+let sitesLoaded = false;
+
+// ── GAS REQUEST (JSONP) ─────────────────────────────────────
+function gasRequest(action, data, id) {
+  return new Promise((resolve, reject) => {
+    if (!GAS_URL) { reject(new Error('GAS_URL not configured')); return; }
+    const cbName = 'gas_' + Date.now() + '_' + Math.floor(Math.random()*1000);
+    const params = new URLSearchParams({ action, callback: cbName });
+    if (data !== undefined) params.append('data', encodeURIComponent(JSON.stringify(data)));
+    if (id !== undefined) params.append('id', String(id));
+    const script = document.createElement('script');
+    const cleanup = () => { try { document.head.removeChild(script); } catch(e){} delete window[cbName]; };
+    const timer = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 15000);
+    window[cbName] = (result) => {
+      clearTimeout(timer); cleanup();
+      if (result.ok) resolve(result.data);
+      else reject(new Error(result.error));
+    };
+    script.onerror = () => { clearTimeout(timer); cleanup(); reject(new Error('Network error')); };
+    script.src = GAS_URL + '?' + params;
+    document.head.appendChild(script);
+  });
+}
+
+function setGasStatus(msg, type) {
+  const el = document.getElementById('gasStatus');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'gas-status' + (type ? ' ' + type : '');
+}
+
+// ── LOAD FROM SHEETS ─────────────────────────────────────────
+async function loadSitesData() {
+  if (!GAS_URL) {
+    setGasStatus('Not connected to Sheets', '');
+    renderSites();
+    renderComments();
+    return;
   }
-];
+  setGasStatus('Loading…', '');
+  try {
+    const result = await gasRequest('getAll');
+    const gradeOrder = {A:0,B:1,C:2,D:3,F:4};
+    brands = (result.brands || []).map(b => ({...b, grade: String(b.grade).trim().toUpperCase()}));
+    brands.sort((a,b) => (gradeOrder[a.grade]??9) - (gradeOrder[b.grade]??9));
+    comments = result.comments || [];
+    setGasStatus('Synced', 'ok');
+    renderSites();
+    renderComments();
+    document.getElementById('sitesDisclaimer').style.display = 'block';
+  } catch(e) {
+    setGasStatus('Offline — showing cached data', 'error');
+    renderSites();
+    renderComments();
+  }
+}
+
+// ── TOGGLE EXPAND ────────────────────────────────────────────
+function toggleExpand(id) {
+  const toggle = document.getElementById(id + 'Toggle');
+  const body   = document.getElementById(id + 'Body');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  toggle.classList.toggle('open', !isOpen);
+  if (!isOpen) {
+    if (id === 'lib') renderLibrary();
+    if (id === 'sites' && !sitesLoaded) { sitesLoaded = true; loadSitesData(); }
+  }
+}
+// ── RENDER BRANDS ─────────────────────────────────────────────
+function renderSites() {
+  const el = document.getElementById('sitesInner');
+  if (!el) return;
+  const gradeOrder = {A:0,B:1,C:2,D:3,F:4};
+  const q = (document.getElementById('brandSearch')?.value || '').toLowerCase().trim();
+
+  let filtered = [...brands].sort((a,b) => (gradeOrder[a.grade]??9) - (gradeOrder[b.grade]??9));
+
+  if (q) {
+    filtered = filtered.filter(s => {
+      const haystack = [s.name, s.note, s.grade, ...(s.tags||[])].join(' ').toLowerCase();
+      return haystack.includes(q);
+    });
+  }
+
+  if (filtered.length === 0) {
+    el.innerHTML = `<div class="sites-loading">${q ? `No brands match "${q}".` : GAS_URL ? 'No brands found. Add one above.' : 'Configure GAS_URL to load brands.'}</div>`;
+    return;
+  }
+
+  el.innerHTML = `<div class="sites-grid">${filtered.map(s => renderBrandCard(s)).join('')}</div>`;
+}
+
+function renderBrandCard(s) {
+  return `<div class="site-card" id="card-${s.id}">
+    <div class="site-top">
+      <div>
+        <div class="site-name">${esc(s.name)}</div>
+        <a class="site-link" href="${esc(s.url)}" target="_blank">${esc(s.url.replace('https://','').replace('www.',''))} ↗</a>
+      </div>
+      <div class="site-grade g${s.grade}">${s.grade}</div>
+    </div>
+    <div class="site-note">${esc(s.note)}</div>
+    <div class="site-tags">${s.tags.map(t=>`<span class="site-tag">${esc(t)}</span>`).join('')}</div>
+    <button class="edit-toggle" onclick="openEditModal('${s.id}')">edit</button>
+  </div>`;
+}
+
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function getAllTags() {
+  const set = new Set();
+  brands.forEach(b => b.tags.forEach(t => set.add(t)));
+  return [...set].sort();
+}
+
+function openEditModal(id) {
+  const s = brands.find(b => b.id === id);
+  if (!s) return;
+  closeEditModal(); // close any existing
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'editModal';
+  overlay.onclick = (e) => { if (e.target === overlay) closeEditModal(); };
+
+  overlay.innerHTML = `
+    <div class="modal-box">
+      <div class="modal-header">
+        <span class="modal-title">Edit — ${esc(s.name)}</span>
+        <button class="modal-close" onclick="closeEditModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="brand-edit-form" style="border:none;padding:0;background:none">
+          <div class="bef-row"><span class="bef-label">Name</span><input class="bef-input" id="e-name-${s.id}" value="${esc(s.name)}"></div>
+          <div class="bef-row"><span class="bef-label">URL</span><input class="bef-input" id="e-url-${s.id}" value="${esc(s.url)}"></div>
+          <div class="bef-row">
+            <span class="bef-label">Grade</span>
+            <select class="bef-grade-select" id="e-grade-${s.id}">
+              ${['A','B','C','D','F'].map(g=>`<option${g===s.grade?' selected':''}>${g}</option>`).join('')}
+            </select>
+          </div>
+          <div class="bef-row"><span class="bef-label">Note</span><textarea class="bef-textarea" id="e-note-${s.id}">${esc(s.note)}</textarea></div>
+          <div class="bef-row">
+            <span class="bef-label">Tags</span>
+            <div class="tag-editor" id="e-tags-${s.id}">${s.tags.map(t=>`<span class="tag-pill">${esc(t)}<button onclick="removeTagFromEdit('${s.id}','${esc(t)}')" title="Remove">×</button></span>`).join('')}</div>
+          </div>
+          <div class="bef-row">
+            <span class="bef-label"></span>
+            <div class="tag-input-wrap">
+              <input class="bef-input" id="e-tag-input-${s.id}" placeholder="Add tag…" oninput="filterTagSuggest('e-${s.id}')" onkeydown="tagInputKey(event,'e-${s.id}')" style="width:140px" autocomplete="off">
+              <div class="tag-suggest" id="e-${s.id}-tag-suggest" style="display:none"></div>
+            </div>
+          </div>
+          <div class="bef-actions">
+            <button class="bef-delete" onclick="confirmDeleteBrand('${s.id}','${esc(s.name)}')">Delete</button>
+            <button class="bef-cancel" onclick="closeEditModal()">Cancel</button>
+            <button class="bef-save" onclick="saveCardEdit('${s.id}')">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  document.body.appendChild(overlay);
+  // focus first input
+  setTimeout(() => { const el = document.getElementById('e-name-' + s.id); if(el) el.focus(); }, 50);
+}
+
+function closeEditModal() {
+  const existing = document.getElementById('editModal');
+  if (existing) existing.remove();
+}
+
+// close modal on Escape key
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeEditModal(); });
+
+function removeTagFromEdit(brandId, tag) {
+  const editor = document.getElementById('e-tags-' + brandId);
+  const pills = editor.querySelectorAll('.tag-pill');
+  pills.forEach(p => { if (p.textContent.trim().slice(0,-1) === tag) p.remove(); });
+}
+
+function getCurrentEditTags(brandId) {
+  const editor = document.getElementById('e-tags-' + brandId);
+  return [...editor.querySelectorAll('.tag-pill')].map(p => p.textContent.trim().replace(/×$/, '').trim()).filter(Boolean);
+}
+
+async function saveCardEdit(id) {
+  const name  = document.getElementById('e-name-' + id).value.trim();
+  const url   = document.getElementById('e-url-' + id).value.trim();
+  const grade = document.getElementById('e-grade-' + id).value;
+  const note  = document.getElementById('e-note-' + id).value.trim();
+  const tags  = getCurrentEditTags(id);
+
+  if (!name) { alert('Brand name required.'); return; }
+
+  const data = { id, name, url, grade, note, tags };
+
+  if (GAS_URL) {
+    setGasStatus('Saving…', '');
+    try {
+      await gasRequest('updateBrand', data);
+      setGasStatus('Saved', 'ok');
+    } catch(e) {
+      setGasStatus('Save failed: ' + e.message, 'error');
+      return;
+    }
+  }
+
+  const idx = brands.findIndex(b => b.id === id);
+  if (idx >= 0) brands[idx] = data;
+  closeEditModal();
+  renderSites();
+}
+
+async function confirmDeleteBrand(id, name) {
+  if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+  if (GAS_URL) {
+    setGasStatus('Deleting…', '');
+    try {
+      await gasRequest('deleteBrand', undefined, id);
+      setGasStatus('Deleted', 'ok');
+    } catch(e) {
+      setGasStatus('Delete failed: ' + e.message, 'error');
+      return;
+    }
+  }
+  brands = brands.filter(b => b.id !== id);
+  closeEditModal();
+  renderSites();
+}
+
+// ── ADD BRAND ─────────────────────────────────────────────────
+function toggleAddForm() {
+  const form = document.getElementById('addBrandForm');
+  form.classList.toggle('visible');
+  if (form.classList.contains('visible')) {
+    newBrandTags = [];
+    document.getElementById('nb-tags-editor').innerHTML = '';
+    document.getElementById('nb-name').value = '';
+    document.getElementById('nb-url').value = '';
+    document.getElementById('nb-note').value = '';
+    document.getElementById('nb-grade').value = 'C';
+    document.getElementById('nb-tag-input').value = '';
+  }
+}
+
+async function submitNewBrand() {
+  const name  = document.getElementById('nb-name').value.trim();
+  const url   = document.getElementById('nb-url').value.trim();
+  const grade = document.getElementById('nb-grade').value;
+  const note  = document.getElementById('nb-note').value.trim();
+  const tags  = [...document.getElementById('nb-tags-editor').querySelectorAll('.tag-pill')]
+                  .map(p => p.textContent.trim().replace(/×$/, '').trim()).filter(Boolean);
+
+  if (!name) { alert('Brand name required.'); return; }
+
+  const data = { name, url, grade, note, tags };
+
+  if (GAS_URL) {
+    setGasStatus('Saving…', '');
+    try {
+      const result = await gasRequest('addBrand', data);
+      data.id = result.id;
+      setGasStatus('Saved', 'ok');
+    } catch(e) {
+      setGasStatus('Save failed: ' + e.message, 'error');
+      return;
+    }
+  } else {
+    data.id = 'local_' + Date.now();
+  }
+
+  brands.push(data);
+  toggleAddForm();
+  renderSites();
+}
+
+// ── TAG SUGGEST ───────────────────────────────────────────────
+function filterTagSuggest(prefix) {
+  const inputId   = prefix === 'nb' ? 'nb-tag-input' : `e-tag-input-${prefix.replace('e-','')}`;
+  const suggestId = prefix === 'nb' ? 'nb-tag-suggest' : `${prefix}-tag-suggest`;
+  const input     = document.getElementById(inputId);
+  const suggest   = document.getElementById(suggestId);
+  if (!input || !suggest) return;
+
+  const q = input.value.toLowerCase().trim();
+  if (!q) { suggest.style.display = 'none'; return; }
+
+  const all = getAllTags();
+  const matches = all.filter(t => t.toLowerCase().includes(q)).slice(0, 8);
+
+  if (matches.length === 0) { suggest.style.display = 'none'; return; }
+
+  suggest.innerHTML = matches.map(t =>
+    `<div class="tag-suggest-item" onclick="selectTagSuggest('${prefix}','${esc(t)}')">${esc(t)}</div>`
+  ).join('');
+  suggest.style.display = 'block';
+}
+
+function selectTagSuggest(prefix, tag) {
+  addTagToEditor(prefix, tag);
+  const inputId   = prefix === 'nb' ? 'nb-tag-input' : `e-tag-input-${prefix.replace('e-','')}`;
+  const suggestId = prefix === 'nb' ? 'nb-tag-suggest' : `${prefix}-tag-suggest`;
+  document.getElementById(inputId).value = '';
+  document.getElementById(suggestId).style.display = 'none';
+}
+
+function tagInputKey(e, prefix) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const inputId = prefix === 'nb' ? 'nb-tag-input' : `e-tag-input-${prefix.replace('e-','')}`;
+    const input = document.getElementById(inputId);
+    const val = input.value.trim().replace(/,$/, '');
+    if (val) { addTagToEditor(prefix, val); input.value = ''; }
+    const suggestId = prefix === 'nb' ? 'nb-tag-suggest' : `${prefix}-tag-suggest`;
+    document.getElementById(suggestId).style.display = 'none';
+  }
+}
+
+function addTagToEditor(prefix, tag) {
+  const editorId = prefix === 'nb' ? 'nb-tags-editor' : `e-tags-${prefix.replace('e-','')}`;
+  const editor = document.getElementById(editorId);
+  if (!editor) return;
+  const existing = [...editor.querySelectorAll('.tag-pill')].map(p => p.textContent.trim().replace(/×$/, '').trim());
+  if (existing.includes(tag)) return;
+  const pill = document.createElement('span');
+  pill.className = 'tag-pill';
+  pill.innerHTML = `${esc(tag)}<button onclick="this.parentElement.remove()" title="Remove">×</button>`;
+  editor.appendChild(pill);
+}
+
+// Hide suggest on outside click
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.tag-input-wrap')) {
+    document.querySelectorAll('.tag-suggest').forEach(s => s.style.display = 'none');
+  }
+});
+
+// ── COMMENTS ─────────────────────────────────────────────────
+function renderComments() {
+  const list  = document.getElementById('commentList');
+  const count = document.getElementById('commentCount');
+  if (!list) return;
+
+  const n = comments.length;
+  if (count) count.textContent = n;
+
+  if (n === 0) {
+    list.innerHTML = `<div class="comment-empty">No notes yet — be the first.</div>`;
+    return;
+  }
+
+  const sorted = [...comments].sort((a,b) => b.timestamp.localeCompare(a.timestamp));
+  list.innerHTML = sorted.map(c => {
+    const date = new Date(c.timestamp);
+    const dateStr = isNaN(date) ? c.timestamp : date.toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    return `<div class="comment-item">
+      <div class="comment-body">
+        <div class="comment-meta">
+          <span class="comment-author">${esc(c.author || 'Anonymous')}</span>
+          <span>${esc(dateStr)}</span>
+        </div>
+        <div class="comment-text">${esc(c.comment)}</div>
+      </div>
+      <button class="comment-del" onclick="deleteComment('${c.id}')" title="Delete">×</button>
+    </div>`;
+  }).join('');
+}
+
+async function submitComment() {
+  const author  = document.getElementById('commentAuthor').value.trim();
+  const text    = document.getElementById('commentText').value.trim();
+  const btn     = document.getElementById('commentSubmitBtn');
+  if (!text) return;
+
+  const data = { author: author || 'Anonymous', comment: text };
+
+  btn.disabled = true;
+  btn.textContent = 'Posting…';
+
+  if (GAS_URL) {
+    try {
+      const result = await gasRequest('addComment', data);
+      data.id = result.id;
+      data.timestamp = result.timestamp;
+    } catch(e) {
+      alert('Failed to save comment: ' + e.message);
+      btn.disabled = false;
+      btn.textContent = 'Post';
+      return;
+    }
+  } else {
+    data.id = 'local_' + Date.now();
+    data.timestamp = new Date().toISOString();
+  }
+
+  comments.push(data);
+  document.getElementById('commentText').value = '';
+  renderComments();
+  btn.disabled = false;
+  btn.textContent = 'Post';
+}
+
+async function deleteComment(id) {
+  if (!confirm('Delete this comment?')) return;
+  if (GAS_URL) {
+    try {
+      await gasRequest('deleteComment', undefined, id);
+    } catch(e) {
+      alert('Failed to delete: ' + e.message);
+      return;
+    }
+  }
+  comments = comments.filter(c => c.id !== id);
+  renderComments();
+}
+
+// ── LIBRARY ───────────────────────────────────────────────────
 
 const CAT_ORDER = ["Natural fiber", "Semi-synthetic", "Synthetic"];
 const CAT_COLORS = {
@@ -1669,19 +2337,6 @@ const CAT_COLORS = {
   "Semi-synthetic": "#8A7020",
   "Synthetic": "#7A1A1A"
 };
-
-function toggleExpand(id) {
-  const toggle = document.getElementById(id + "Toggle");
-  const body = document.getElementById(id + "Body");
-  const arrow = document.getElementById(id + "Arrow");
-  const isOpen = body.classList.contains("open");
-  if (!isOpen) {
-    if (id === "lib") renderLibrary();
-    if (id === "sites") renderSites();
-  }
-  body.classList.toggle("open", !isOpen);
-  toggle.classList.toggle("open", !isOpen);
-}
 
 function toggleLibItem(idx) {
   const item = document.getElementById("libitem-" + idx);
@@ -1743,34 +2398,10 @@ function renderLibrary() {
     ${html}`;
 }
 
-function renderSites() {
-  const el = document.getElementById("sitesInner");
-  const gradeOrder = {A:0, B:1, C:2, D:3, F:4};
-  const sorted = [...SITES].sort((a,b) => gradeOrder[a.grade] - gradeOrder[b.grade]);
-  const cards = sorted.map(s => `
-    <div class="site-card">
-      <div class="site-top">
-        <div>
-          <div class="site-name">${s.name}</div>
-          <a class="site-link" href="${s.url}" target="_blank">${s.url.replace('https://','').replace('www.','')} ↗</a>
-        </div>
-        <div class="site-grade g${s.grade}">${s.grade}</div>
-      </div>
-      <div class="site-note">${s.note}</div>
-      <div class="site-tags">${s.tags.map(t => `<span class="site-tag">${t}</span>`).join("")}</div>
-    </div>`).join("");
-  el.innerHTML = `
-    <div class="sites-grid">${cards}</div>
-    <div class="sites-disclaimer">
-      Grades based on publicly available fiber practices, certifications, and sustainability reporting — not paid placement. 
-      A/B = consistently good natural fiber options. C = mixed, with good individual picks if you read labels. D = mostly conventional/synthetic with limited clean options. F = avoid for natural fiber goals.
-      Always verify fabric content on the product page before buying — formulations change.
-    </div>`;
-}
-
 populateSelect();
 renderFiberList();
 updateResults();
+renderComments();
 </script>
 </body>
 </html>
