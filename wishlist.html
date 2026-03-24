@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wishlist</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231C1C1A'/><text y='23' x='5' font-size='20' font-family='serif'>✦</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,500;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F5F3EE;
+  --surface: #FFFFFF;
+  --surface2: #ECEAE4;
+  --border: #D8D5CC;
+  --text: #1C1C1A;
+  --muted: #6B6860;
+  --green: #2A5C26;
+  --green-bg: #EAF2E8;
+  --amber: #7A4A0E;
+  --amber-bg: #FDF3E3;
+  --red: #7A1A1A;
+  --red-bg: #FDEAEA;
+  --accent: #2A5C26;
+  --mono: 'DM Mono', monospace;
+  --serif: 'Fraunces', serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:13px;min-height:100vh}
+
+header{
+  background:var(--text);color:#F5F3EE;
+  padding:28px 40px 24px;
+  display:flex;align-items:baseline;gap:20px;flex-wrap:wrap;
+  justify-content:space-between;
+}
+header h1{font-family:var(--serif);font-weight:300;font-size:28px;letter-spacing:-0.5px;color:#F5F3EE}
+header span{font-family:var(--mono);font-size:11px;color:#888880;letter-spacing:0.08em;text-transform:uppercase}
+.header-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.gas-status{font-size:11px;color:#888880}
+.gas-status.ok{color:#6DBF6A}
+.gas-status.error{color:#E07070}
+
+.toolbar{
+  max-width:1100px;margin:24px auto 0;padding:0 24px;
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+}
+.toolbar input[type="text"]{
+  flex:1;min-width:180px;max-width:280px;
+  padding:7px 11px;border:0.5px solid var(--border);border-radius:7px;
+  background:var(--surface);color:var(--text);font-family:var(--mono);font-size:13px;outline:none;
+}
+.toolbar input[type="text"]:focus{border-color:var(--accent)}
+.cat-filters{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.cat-pill{
+  padding:4px 12px;border-radius:20px;font-size:11px;font-family:var(--mono);
+  border:0.5px solid var(--border);background:var(--surface);color:var(--muted);
+  cursor:pointer;transition:all 0.15s;white-space:nowrap;
+}
+.cat-pill.active{background:var(--text);color:#F5F3EE;border-color:var(--text)}
+.sort-select{
+  padding:7px 11px;border:0.5px solid var(--border);border-radius:7px;
+  background:var(--surface);color:var(--text);font-family:var(--mono);font-size:12px;
+  outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;
+}
+.add-btn-main{
+  padding:7px 16px;background:var(--text);color:#F5F3EE;
+  border:none;border-radius:7px;font-family:var(--mono);font-size:12px;
+  cursor:pointer;white-space:nowrap;transition:opacity 0.15s;
+}
+.add-btn-main:hover{opacity:0.8}
+
+.grid{
+  max-width:1100px;margin:20px auto 60px;padding:0 24px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;
+}
+
+.wish-card{
+  background:var(--surface);border:0.5px solid var(--border);border-radius:12px;
+  overflow:hidden;display:flex;flex-direction:column;
+  transition:box-shadow 0.15s;
+}
+.wish-card:hover{box-shadow:0 2px 12px rgba(0,0,0,0.07)}
+
+.card-img{
+  width:100%;aspect-ratio:3/4;object-fit:cover;
+  background:var(--surface2);display:block;
+}
+.card-img-placeholder{
+  width:100%;aspect-ratio:3/4;background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;color:var(--border);
+}
+
+.card-body{padding:12px 14px;flex:1;display:flex;flex-direction:column;gap:6px}
+
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.card-name{font-size:13px;font-weight:500;line-height:1.3;flex:1}
+.card-price{font-family:var(--serif);font-size:17px;font-weight:300;white-space:nowrap;flex-shrink:0}
+
+.card-cat{
+  display:inline-block;font-size:10px;padding:2px 8px;border-radius:3px;
+  background:var(--surface2);color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;
+  align-self:flex-start;
+}
+
+.card-rating{
+  font-family:var(--serif);font-size:13px;font-weight:300;
+}
+.gA{color:#2A5C26}.gB{color:#3A7A2A}.gC{color:#8A7020}.gD{color:#B05010}.gF{color:#7A1A1A}
+
+.card-tags{display:flex;flex-wrap:wrap;gap:4px}
+.tag-chip{
+  font-size:10px;padding:2px 7px;border-radius:3px;
+  background:var(--bg);border:0.5px solid var(--border);color:var(--muted);
+}
+
+.card-actions{
+  display:flex;gap:6px;margin-top:auto;padding-top:10px;border-top:0.5px solid var(--border);
+  align-items:center;
+}
+.btn-shop{
+  flex:1;padding:6px 0;background:var(--text);color:#F5F3EE;
+  border:none;border-radius:5px;font-family:var(--mono);font-size:11px;
+  cursor:pointer;text-decoration:none;display:block;text-align:center;
+  transition:opacity 0.15s;
+}
+.btn-shop:hover{opacity:0.8}
+.btn-edit{
+  padding:6px 11px;background:none;border:0.5px solid var(--border);
+  border-radius:5px;font-family:var(--mono);font-size:11px;color:var(--muted);
+  cursor:pointer;transition:all 0.15s;
+}
+.btn-edit:hover{border-color:var(--accent);color:var(--accent)}
+
+.empty-state{
+  grid-column:1/-1;text-align:center;padding:60px 20px;
+  color:var(--muted);font-size:13px;
+}
+.empty-big{font-family:var(--serif);font-size:48px;font-weight:300;color:var(--border);margin-bottom:8px}
+
+/* modal */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  animation:fadeInOverlay 0.15s ease;
+}
+@keyframes fadeInOverlay{from{opacity:0}to{opacity:1}}
+.modal-box{
+  background:var(--surface);border:0.5px solid var(--border);border-radius:14px;
+  width:100%;max-width:520px;max-height:92vh;overflow-y:auto;
+  animation:slideUpModal 0.18s ease;
+  box-shadow:0 8px 40px rgba(0,0,0,0.18);
+}
+@keyframes slideUpModal{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px 12px;border-bottom:0.5px solid var(--border);
+}
+.modal-title{font-size:13px;font-weight:500}
+.modal-close{background:none;border:none;font-size:20px;color:var(--muted);cursor:pointer;line-height:1;padding:0 2px;transition:color 0.15s}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:16px 20px 20px}
+
+.form-row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.form-label{font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);font-weight:500;min-width:70px}
+.form-input{
+  flex:1;padding:7px 9px;border:0.5px solid var(--border);border-radius:5px;
+  background:var(--bg);color:var(--text);font-family:var(--mono);font-size:13px;outline:none;
+}
+.form-input:focus{border-color:var(--accent)}
+.form-select{
+  flex:1;padding:7px 9px;border:0.5px solid var(--border);border-radius:5px;
+  background:var(--bg);color:var(--text);font-family:var(--mono);font-size:13px;
+  outline:none;appearance:none;-webkit-appearance:none;
+}
+.form-select:focus{border-color:var(--accent)}
+
+.tag-editor{display:flex;flex-wrap:wrap;gap:4px;align-items:center;flex:1}
+.tag-pill{
+  display:inline-flex;align-items:center;gap:4px;font-size:10px;
+  padding:2px 6px;border-radius:3px;background:var(--surface2);color:var(--muted);
+}
+.tag-pill button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:12px;line-height:1;padding:0}
+.tag-pill button:hover{color:var(--red)}
+.tag-input-wrap{position:relative}
+.tag-suggest{
+  position:absolute;top:100%;left:0;z-index:10;
+  background:var(--surface);border:0.5px solid var(--border);border-radius:6px;
+  min-width:160px;max-height:130px;overflow-y:auto;
+}
+.tag-suggest-item{padding:6px 10px;font-size:12px;cursor:pointer;color:var(--text)}
+.tag-suggest-item:hover{background:var(--bg)}
+
+.img-preview{
+  width:100%;max-height:180px;object-fit:cover;
+  border-radius:6px;border:0.5px solid var(--border);
+  margin-bottom:10px;display:none;
+}
+.img-preview.visible{display:block}
+
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;padding-top:12px;border-top:0.5px solid var(--border);margin-top:4px}
+.btn-save{
+  padding:7px 18px;background:var(--accent);color:#fff;
+  border:none;border-radius:5px;font-family:var(--mono);font-size:12px;cursor:pointer;transition:opacity 0.15s;
+}
+.btn-save:hover{opacity:0.85}
+.btn-cancel{
+  padding:7px 14px;background:none;border:0.5px solid var(--border);border-radius:5px;
+  font-family:var(--mono);font-size:12px;color:var(--muted);cursor:pointer;transition:all 0.15s;
+}
+.btn-cancel:hover{border-color:var(--muted);color:var(--text)}
+.btn-del{
+  padding:7px 14px;background:none;border:0.5px solid var(--border);border-radius:5px;
+  font-family:var(--mono);font-size:12px;color:var(--muted);cursor:pointer;transition:all 0.15s;margin-right:auto;
+}
+.btn-del:hover{border-color:var(--red);color:var(--red)}
+
+.count-badge{
+  font-size:10px;background:rgba(255,255,255,0.15);color:#F5F3EE;
+  border-radius:20px;padding:2px 8px;font-weight:500;
+}
+
+@media(max-width:520px){
+  header{padding:20px 20px 16px}
+  .toolbar,.grid{padding:0 14px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex;align-items:baseline;gap:16px;flex-wrap:wrap">
+    <h1>Wishlist</h1>
+    <span>Natural fiber finds</span>
+  </div>
+  <div class="header-right">
+    <span class="gas-status" id="gasStatus"></span>
+    <span class="count-badge" id="totalCount">0 items</span>
+    <button class="add-btn-main" onclick="openModal()">+ Add item</button>
+  </div>
+</header>
+
+<div class="toolbar">
+  <input type="text" id="searchInput" placeholder="Search items…" oninput="renderGrid()">
+  <select class="sort-select" id="sortSelect" onchange="renderGrid()">
+    <option value="added">Recently added</option>
+    <option value="price-asc">Price: low to high</option>
+    <option value="price-desc">Price: high to low</option>
+    <option value="name">Name A–Z</option>
+    <option value="rating">Fabric rating</option>
+  </select>
+  <div class="cat-filters" id="catFilters">
+    <button class="cat-pill active" data-cat="" onclick="setCategory(this,'')">All</button>
+  </div>
+</div>
+
+<div class="grid" id="wishGrid">
+  <div class="empty-state">
+    <div class="empty-big">✦</div>
+    <p>Loading wishlist…</p>
+  </div>
+</div>
+
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxNM864N1wQMUxDKHbKA40sGXlUMWP_GCvJQ2ALuaTfpk3nRxt9SUCeXG2RNH1zU71-7g/exec';
+
+let wishes = [];
+let activeCat = '';
+
+// ── GAS ──────────────────────────────────────────────────────
+function gasRequest(action, data, id) {
+  return new Promise((resolve, reject) => {
+    const cb = 'wl_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    const params = new URLSearchParams({ action, callback: cb });
+    if (data !== undefined) params.append('data', encodeURIComponent(JSON.stringify(data)));
+    if (id !== undefined) params.append('id', String(id));
+    const script = document.createElement('script');
+    const cleanup = () => { try{document.head.removeChild(script)}catch(e){} delete window[cb]; };
+    const timer = setTimeout(() => { cleanup(); reject(new Error('Timeout')); }, 15000);
+    window[cb] = (r) => { clearTimeout(timer); cleanup(); r.ok ? resolve(r.data) : reject(new Error(r.error)); };
+    script.onerror = () => { clearTimeout(timer); cleanup(); reject(new Error('Network error')); };
+    script.src = GAS_URL + '?' + params;
+    document.head.appendChild(script);
+  });
+}
+
+function setStatus(msg, type) {
+  const el = document.getElementById('gasStatus');
+  el.textContent = msg;
+  el.className = 'gas-status' + (type ? ' ' + type : '');
+}
+
+// ── LOAD ─────────────────────────────────────────────────────
+async function loadWishlist() {
+  setStatus('Loading…', '');
+  try {
+    wishes = await gasRequest('getWishlist');
+    setStatus('Synced', 'ok');
+  } catch(e) {
+    setStatus('Offline', 'error');
+    wishes = wishes.length ? wishes : [];
+  }
+  buildCategoryFilters();
+  renderGrid();
+}
+
+// ── CATEGORIES ───────────────────────────────────────────────
+function getAllCategories() {
+  const set = new Set(wishes.map(w => w.category).filter(Boolean));
+  return [...set].sort();
+}
+
+function buildCategoryFilters() {
+  const wrap = document.getElementById('catFilters');
+  const cats = getAllCategories();
+  wrap.innerHTML = `<button class="cat-pill${activeCat===''?' active':''}" data-cat="" onclick="setCategory(this,'')">All</button>` +
+    cats.map(c => `<button class="cat-pill${activeCat===c?' active':''}" data-cat="${esc(c)}" onclick="setCategory(this,'${esc(c)}')">${esc(c)}</button>`).join('');
+  document.getElementById('totalCount').textContent = wishes.length + ' item' + (wishes.length!==1?'s':'');
+}
+
+function setCategory(btn, cat) {
+  activeCat = cat;
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid();
+}
+
+// ── RENDER GRID ───────────────────────────────────────────────
+function renderGrid() {
+  const grid = document.getElementById('wishGrid');
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  const sort = document.getElementById('sortSelect').value;
+  const gradeOrder = {A:0,B:1,C:2,D:3,F:4};
+
+  let list = [...wishes];
+  if (activeCat) list = list.filter(w => w.category === activeCat);
+  if (q) list = list.filter(w => [w.name,w.category,w.fabricRating,...(w.tags||[])].join(' ').toLowerCase().includes(q));
+
+  list.sort((a,b) => {
+    if (sort === 'price-asc')  return (parseFloat(a.price)||0) - (parseFloat(b.price)||0);
+    if (sort === 'price-desc') return (parseFloat(b.price)||0) - (parseFloat(a.price)||0);
+    if (sort === 'name')       return a.name.localeCompare(b.name);
+    if (sort === 'rating')     return (gradeOrder[a.fabricRating]??9) - (gradeOrder[b.fabricRating]??9);
+    return b.id.localeCompare(a.id); // recently added
+  });
+
+  if (list.length === 0) {
+    grid.innerHTML = `<div class="empty-state"><div class="empty-big">✦</div><p>${q||activeCat?'No items match your search.':'Your wishlist is empty — add something!'}</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map(renderCard).join('');
+}
+
+function renderCard(w) {
+  const price = w.price ? '$' + parseFloat(w.price).toFixed(2) : '';
+  const imgHtml = w.imageUrl
+    ? `<img class="card-img" src="${esc(w.imageUrl)}" alt="${esc(w.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+    : '';
+  const placeholderStyle = w.imageUrl ? 'style="display:none"' : '';
+  const tags = (w.tags||[]).map(t=>`<span class="tag-chip">${esc(t)}</span>`).join('');
+  const rating = w.fabricRating ? `<span class="card-rating g${w.fabricRating}">${w.fabricRating}</span>` : '';
+  const shopBtn = w.productUrl
+    ? `<a class="btn-shop" href="${esc(w.productUrl)}" target="_blank">Shop ↗</a>`
+    : `<span class="btn-shop" style="opacity:0.3;cursor:default">No link</span>`;
+
+  return `<div class="wish-card">
+    ${imgHtml}
+    <div class="card-img-placeholder" ${placeholderStyle}>✦</div>
+    <div class="card-body">
+      <div class="card-top">
+        <div class="card-name">${esc(w.name)}</div>
+        <div class="card-price">${price}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        ${w.category ? `<span class="card-cat">${esc(w.category)}</span>` : ''}
+        ${rating ? `<span style="font-size:11px;color:var(--muted)">Fabric <span class="gA" style="">${rating}</span></span>` : ''}
+      </div>
+      ${tags ? `<div class="card-tags">${tags}</div>` : ''}
+      <div class="card-actions">
+        ${shopBtn}
+        <button class="btn-edit" onclick="openModal('${w.id}')">Edit</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── MODAL ─────────────────────────────────────────────────────
+let editingTags = [];
+
+function openModal(id) {
+  closeModal();
+  const w = id ? wishes.find(x => x.id === id) : null;
+  editingTags = w ? [...(w.tags||[])] : [];
+
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'wishModal';
+  overlay.onclick = (e) => { if(e.target===overlay) closeModal(); };
+
+  const gradeOpts = ['','A','B','C','D','F'].map(g =>
+    `<option value="${g}"${w&&w.fabricRating===g?' selected':''}>${g||'— none —'}</option>`).join('');
+  const catSuggestions = getAllCategories();
+
+  overlay.innerHTML = `
+    <div class="modal-box">
+      <div class="modal-header">
+        <span class="modal-title">${w ? 'Edit item' : 'Add to wishlist'}</span>
+        <button class="modal-close" onclick="closeModal()">×</button>
+      </div>
+      <div class="modal-body">
+        ${w&&w.imageUrl ? `<img class="img-preview visible" id="imgPreview" src="${esc(w.imageUrl)}" alt="">` : `<img class="img-preview" id="imgPreview" alt="">`}
+        <div class="form-row">
+          <span class="form-label">Name</span>
+          <input class="form-input" id="f-name" value="${w?esc(w.name):''}" placeholder="Item name">
+        </div>
+        <div class="form-row">
+          <span class="form-label">Price</span>
+          <input class="form-input" id="f-price" type="number" step="0.01" min="0" value="${w?w.price:''}" placeholder="0.00" style="max-width:120px">
+        </div>
+        <div class="form-row">
+          <span class="form-label">Image URL</span>
+          <input class="form-input" id="f-img" value="${w?esc(w.imageUrl):''}" placeholder="https://…" oninput="previewImg(this.value)">
+        </div>
+        <div class="form-row">
+          <span class="form-label">Category</span>
+          <input class="form-input" id="f-cat" value="${w?esc(w.category):''}" placeholder="shorts, top, jacket…" list="cat-list">
+          <datalist id="cat-list">${catSuggestions.map(c=>`<option value="${esc(c)}">`).join('')}</datalist>
+        </div>
+        <div class="form-row">
+          <span class="form-label">Link</span>
+          <input class="form-input" id="f-url" value="${w?esc(w.productUrl):''}" placeholder="https://…">
+        </div>
+        <div class="form-row">
+          <span class="form-label">Fabric</span>
+          <select class="form-select" id="f-rating" style="max-width:100px">${gradeOpts}</select>
+        </div>
+        <div class="form-row" style="align-items:flex-start">
+          <span class="form-label" style="margin-top:5px">Tags</span>
+          <div style="flex:1">
+            <div class="tag-editor" id="modal-tag-editor">${editingTags.map(t=>`<span class="tag-pill">${esc(t)}<button onclick="removeModalTag('${esc(t)}')" title="Remove">×</button></span>`).join('')}</div>
+            <div class="tag-input-wrap" style="margin-top:6px">
+              <input class="form-input" id="modal-tag-input" placeholder="Add tag…" style="width:160px" oninput="modalTagSuggest()" onkeydown="modalTagKey(event)" autocomplete="off">
+              <div class="tag-suggest" id="modal-tag-suggest" style="display:none"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-actions">
+          ${w ? `<button class="btn-del" onclick="confirmDelete('${w.id}')">Delete</button>` : ''}
+          <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+          <button class="btn-save" onclick="saveModal('${w?w.id:''}')">${w?'Save':'Add'}</button>
+        </div>
+      </div>
+    </div>`;
+
+  document.body.appendChild(overlay);
+  setTimeout(() => document.getElementById('f-name')?.focus(), 60);
+}
+
+function closeModal() {
+  const m = document.getElementById('wishModal');
+  if(m) m.remove();
+}
+
+function previewImg(url) {
+  const img = document.getElementById('imgPreview');
+  if (!img) return;
+  if (url) { img.src = url; img.className = 'img-preview visible'; }
+  else { img.src = ''; img.className = 'img-preview'; }
+}
+
+function removeModalTag(tag) {
+  editingTags = editingTags.filter(t => t !== tag);
+  const editor = document.getElementById('modal-tag-editor');
+  if (!editor) return;
+  editor.innerHTML = editingTags.map(t => `<span class="tag-pill">${esc(t)}<button onclick="removeModalTag('${esc(t)}')" title="Remove">×</button></span>`).join('');
+}
+
+function addModalTag(tag) {
+  if (!tag || editingTags.includes(tag)) return;
+  editingTags.push(tag);
+  const editor = document.getElementById('modal-tag-editor');
+  if (!editor) return;
+  editor.innerHTML = editingTags.map(t => `<span class="tag-pill">${esc(t)}<button onclick="removeModalTag('${esc(t)}')" title="Remove">×</button></span>`).join('');
+}
+
+function modalTagSuggest() {
+  const input = document.getElementById('modal-tag-input');
+  const suggest = document.getElementById('modal-tag-suggest');
+  if (!input || !suggest) return;
+  const q = input.value.toLowerCase().trim();
+  if (!q) { suggest.style.display = 'none'; return; }
+  const allTags = [...new Set(wishes.flatMap(w => w.tags||[]))].sort();
+  const matches = allTags.filter(t => t.toLowerCase().includes(q)).slice(0,8);
+  if (!matches.length) { suggest.style.display = 'none'; return; }
+  suggest.innerHTML = matches.map(t => `<div class="tag-suggest-item" onclick="selectModalTag('${esc(t)}')">${esc(t)}</div>`).join('');
+  suggest.style.display = 'block';
+}
+
+function selectModalTag(tag) {
+  addModalTag(tag);
+  document.getElementById('modal-tag-input').value = '';
+  document.getElementById('modal-tag-suggest').style.display = 'none';
+}
+
+function modalTagKey(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const input = document.getElementById('modal-tag-input');
+    const val = input.value.trim().replace(/,$/, '');
+    if (val) { addModalTag(val); input.value = ''; }
+    document.getElementById('modal-tag-suggest').style.display = 'none';
+  }
+}
+
+async function saveModal(id) {
+  const name  = document.getElementById('f-name').value.trim();
+  const price = document.getElementById('f-price').value.trim();
+  const imageUrl = document.getElementById('f-img').value.trim();
+  const category = document.getElementById('f-cat').value.trim().toLowerCase();
+  const productUrl = document.getElementById('f-url').value.trim();
+  const fabricRating = document.getElementById('f-rating').value.trim().toUpperCase();
+  const tags = [...editingTags];
+
+  if (!name) { alert('Item name is required.'); return; }
+
+  const data = { name, price, imageUrl, category, productUrl, fabricRating, tags };
+
+  setStatus('Saving…', '');
+  try {
+    if (id) {
+      data.id = id;
+      await gasRequest('updateWish', data);
+      const idx = wishes.findIndex(w => w.id === id);
+      if (idx >= 0) wishes[idx] = data;
+    } else {
+      const result = await gasRequest('addWish', data);
+      data.id = result.id;
+      wishes.unshift(data);
+    }
+    setStatus('Saved', 'ok');
+  } catch(e) {
+    setStatus('Save failed: ' + e.message, 'error');
+    return;
+  }
+
+  closeModal();
+  buildCategoryFilters();
+  renderGrid();
+}
+
+async function confirmDelete(id) {
+  const w = wishes.find(x => x.id === id);
+  if (!confirm(`Remove "${w?.name || 'this item'}" from your wishlist?`)) return;
+  setStatus('Removing…', '');
+  try {
+    await gasRequest('deleteWish', undefined, id);
+    wishes = wishes.filter(x => x.id !== id);
+    setStatus('Removed', 'ok');
+  } catch(e) {
+    setStatus('Delete failed: ' + e.message, 'error');
+    return;
+  }
+  closeModal();
+  buildCategoryFilters();
+  renderGrid();
+}
+
+// ── UTILS ─────────────────────────────────────────────────────
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+document.addEventListener('keydown', (e) => { if(e.key==='Escape') closeModal(); });
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.tag-input-wrap')) {
+    const s = document.getElementById('modal-tag-suggest');
+    if(s) s.style.display = 'none';
+  }
+});
+
+loadWishlist();
+</script>
+</body>
+</html>
