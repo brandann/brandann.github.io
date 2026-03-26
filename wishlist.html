@@ -77,10 +77,60 @@ header span{font-family:var(--mono);font-size:11px;color:#888880;letter-spacing:
 
 .wish-card{
   background:var(--surface);border:0.5px solid var(--border);border-radius:12px;
-  overflow:hidden;display:flex;flex-direction:column;
+  display:flex;flex-direction:column;position:relative;
   transition:box-shadow 0.15s;
 }
 .wish-card:hover{box-shadow:0 2px 12px rgba(0,0,0,0.07)}
+
+/* ── FAVOURITE RAINBOW BORDER ── */
+@keyframes rainbow-spin {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.wish-card.is-favorite { border-color: transparent; }
+.wish-card.is-favorite::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 18px;
+  background: linear-gradient(120deg, #ff0000, #ff8800, #ffff00, #00cc55, #0088ff, #cc00ff, #ff0000);
+  background-size: 300% 300%;
+  animation: rainbow-spin 3s linear infinite;
+  z-index: -1;
+}
+
+/* ── IMAGE WRAPPER (takes over overflow:hidden from card) ── */
+.card-img-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+  flex-shrink: 0;
+}
+
+/* ── HEART LIKE BUTTON ── */
+.heart-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 34px;
+  height: 34px;
+  background: rgba(255,255,255,0.88);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 17px;
+  line-height: 1;
+  padding: 0;
+  z-index: 2;
+  backdrop-filter: blur(4px);
+  transition: transform 0.15s, background 0.15s;
+}
+.heart-btn:hover { transform: scale(1.15); background: rgba(255,255,255,0.98); }
+.heart-btn.liked  { background: rgba(255, 50, 80, 0.18); }
 
 .card-img{
   width:100%;aspect-ratio:3/4;object-fit:cover;
@@ -356,6 +406,8 @@ function renderGrid() {
 
 function renderCard(w) {
   const price = w.price ? '$' + parseFloat(w.price).toFixed(2) : '';
+  const isFav   = String(w.favorite).toLowerCase() === 'true';
+  const isLiked = String(w.liked).toLowerCase()    === 'true';
   const imgHtml = w.imageUrl
     ? `<img class="card-img" src="${esc(w.imageUrl)}" alt="${esc(w.name)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
     : '';
@@ -366,9 +418,12 @@ function renderCard(w) {
     ? `<a class="btn-shop" href="${esc(w.productUrl)}" target="_blank">Shop ↗</a>`
     : `<span class="btn-shop" style="opacity:0.3;cursor:default">No link</span>`;
 
-  return `<div class="wish-card">
-    ${imgHtml}
-    <div class="card-img-placeholder" ${placeholderStyle}>✦</div>
+  return `<div class="wish-card${isFav ? ' is-favorite' : ''}">
+    <div class="card-img-wrap">
+      ${imgHtml}
+      <div class="card-img-placeholder" ${placeholderStyle}>✦</div>
+      <button class="heart-btn${isLiked ? ' liked' : ''}" onclick="toggleLike('${w.id}')" title="${isLiked ? 'Unlike' : 'Like'}">${isLiked ? '❤️' : '🤍'}</button>
+    </div>
     <div class="card-body">
       <div class="card-top">
         <div class="card-name">${esc(w.name)}</div>
@@ -566,6 +621,27 @@ async function confirmDelete(id) {
   closeModal();
   buildCategoryFilters();
   renderGrid();
+}
+
+// ── HEART LIKE ────────────────────────────────────────────────
+async function toggleLike(id) {
+  const idx = wishes.findIndex(x => x.id === id);
+  if (idx < 0) return;
+  const w = wishes[idx];
+  const newLiked = !(w.liked === 'True' || w.liked === true);
+  const updated = { ...w, liked: newLiked ? 'True' : 'False' };
+  // Optimistic UI update
+  wishes[idx] = updated;
+  renderGrid();
+  try {
+    await gasRequest('updateWish', updated);
+    setStatus('Saved', 'ok');
+  } catch(e) {
+    // Revert on failure
+    wishes[idx] = w;
+    renderGrid();
+    setStatus('Save failed: ' + e.message, 'error');
+  }
 }
 
 // ── UTILS ─────────────────────────────────────────────────────

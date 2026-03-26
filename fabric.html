@@ -1164,6 +1164,10 @@
 <header>
   <h1>Fabric Analyzer</h1>
   <span>Garment chemical &amp; skin exposure grader</span>
+  <a href="http://brandann.github.io/wishlist" target="_blank" title="Wishlist" style="margin-left:auto;display:inline-flex;align-items:center;gap:7px;color:#888880;text-decoration:none;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;transition:color 0.15s" onmouseover="this.style.color='#F5F3EE'" onmouseout="this.style.color='#888880'">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    Wishlist
+  </a>
 </header>
 
 <div class="main">
@@ -1505,7 +1509,7 @@ const DB = {
   },
   "Fleece (synthetic)": {
     cat:"Synthetic",
-    chem:"High", osm:"Medium", env:"High",
+    chem:"High", osm:"High", env:"High",
     chemNotes:"Almost always 100% polyester — petroleum-based; may contain PFAS coatings for moisture management",
     osmNotes:"Microplastics shed from fleece surface with every wash and through skin abrasion; PFAS can absorb transdermally",
     envNotes:"One of the worst microplastic polluters — releases hundreds of thousands of plastic fibers per wash cycle that pass through wastewater treatment into waterways and oceans.",
@@ -1518,7 +1522,7 @@ const DB = {
   },
   "Polyester": {
     cat:"Synthetic",
-    chem:"High", osm:"Medium", env:"High",
+    chem:"High", osm:"High", env:"High",
     chemNotes:"Petroleum-based plastic; manufactured with toxic chemicals; PFAS coatings common for water resistance",
     osmNotes:"Microplastics shed from surface and inhaled or absorbed; PFAS from coatings absorb transdermally; traps heat and moisture",
     envNotes:"Non-biodegradable (20-200 years to break down); petroleum sourced; sheds microplastics every wash; over 50% of all textiles produced globally are polyester.",
@@ -1531,7 +1535,7 @@ const DB = {
   },
   "Nylon (Polyamide)": {
     cat:"Synthetic",
-    chem:"High", osm:"Medium", env:"High",
+    chem:"High", osm:"High", env:"High",
     chemNotes:"Petroleum-based; adipic acid production emits significant N2O; often treated with PFAS in activewear. Also sold as Polyamide — same material, different name used more commonly in Europe.",
     osmNotes:"Similar to polyester — microplastic shedding; PFAS absorption potential; common in tights and swimwear",
     envNotes:"N2O emissions from production are 300x more potent than CO2. Non-biodegradable. Microplastic shedder. ECONYL (recycled nylon from fishing nets) is the best alternative.",
@@ -1544,7 +1548,7 @@ const DB = {
   },
   "Elastane / Spandex / Lycra": {
     cat:"Synthetic",
-    chem:"High", osm:"Medium", env:"High",
+    chem:"High", osm:"High", env:"High",
     chemNotes:"Petroleum-based polyurethane; always synthetic; heat-activated off-gassing in small amounts; PFAS sometimes added",
     osmNotes:"Sits against skin constantly in form-fitting garments; heat-activated off-gassing; small but persistent exposure",
     envNotes:"Even in tiny amounts (2-5%) it makes a garment non-biodegradable. A 98% linen 2% elastane shirt cannot break down naturally and cannot be composted.",
@@ -1555,17 +1559,43 @@ const DB = {
       {level:"low", text:"Look for 'elastane-free' if you want truly natural fiber garments"}
     ]
   },
-  "Acrylic": {
-    cat:"Synthetic",
+  "Leather (chrome-tanned)": {
+    cat:"Natural fiber",
     chem:"High", osm:"Medium", env:"High",
-    chemNotes:"Made from acrylonitrile — a known carcinogen; energy-intensive production",
-    osmNotes:"Microfiber shedding into air and skin contact; acrylonitrile residue possible in cheaper manufacturing",
-    envNotes:"Produces 21.1kg CO2 per kg — highest of any textile fiber. Pills aggressively, meaning short lifespan and high replacement rate. Heavy microplastic shedder. Nothing redeemable environmentally.",
+    chemNotes:"Chrome tanning — the method used on ~80–90% of leather — uses trivalent chromium salts that can oxidize to hexavalent chromium (Cr VI), a known carcinogen. Formaldehyde, biocides, and synthetic dyes are also common in the process. Residual chemicals can remain in finished leather.",
+    osmNotes:"Finished leather is a barrier, so direct skin absorption is lower than fabrics. However, chromium residues and formaldehyde can transfer via sweat, particularly in heat. Footwear and tight-fitting leather items carry higher exposure.",
+    envNotes:"Livestock farming is the dominant environmental cost — land use, methane, and water. Chrome tanning adds substantial chemical pollution: tannery wastewater is highly toxic and chromium waste is a regulated hazardous material. One of the most polluting industries in textile supply chains.",
     warns:[
-      {level:"high", text:"Acrylonitrile used in production is classified as a probable human carcinogen"},
-      {level:"high", text:"Pills aggressively from first use — very short lifespan despite high environmental cost"},
-      {level:"high", text:"If a cheap 'wool-style' sweater or fleece has no fiber content listed — it is likely acrylic"},
-      {level:"med", text:"Produces 21.1kg CO2 per kg of fiber — highest carbon of any textile fiber"}
+      {level:"high", text:"~80–90% of leather is chrome-tanned — hexavalent chromium (Cr VI) residue is a known carcinogen"},
+      {level:"high", text:"Tannery wastewater is classified as hazardous; heavy chromium discharge into waterways in unregulated regions"},
+      {level:"med", text:"Residual formaldehyde and dyes can transfer through sweat — especially in shoes or tight-fitting items"},
+      {level:"med", text:"Look for REACH compliance (EU standard) or Leather Working Group (LWG) certification for safer sourcing"}
+    ]
+  },
+  "Leather (vegetable-tanned)": {
+    cat:"Natural fiber",
+    chem:"Medium", osm:"Low", env:"High",
+    chemNotes:"Tanned using plant-derived tannins (oak bark, chestnut, mimosa). No synthetic chromium salts. Dyes and finishes vary — natural wax or oil finishing is cleanest. Synthetic dyes are still common.",
+    osmNotes:"Much lower chemical residue than chrome-tanned leather. Plant tannins are non-toxic. Finished surface has low skin transfer risk. Main variable is the dye and finish used.",
+    envNotes:"Livestock farming remains the largest footprint. The tanning process itself is much cleaner — plant tannins biodegrade and don't produce hazardous waste. Takes significantly longer to produce, which is why it costs more. Still not a low-impact material due to cattle farming.",
+    warns:[
+      {level:"high", text:"Livestock farming footprint is unavoidable regardless of tanning method — land use and methane are significant"},
+      {level:"med", text:"Synthetic dyes are still common even in veg-tan leather — ask about finishing if chemical sensitivity is a concern"},
+      {level:"low", text:"Substantially cleaner than chrome-tanned — genuinely worth seeking out if buying leather"},
+      {level:"low", text:"Usually identifiable by its natural, undyed or warm-toned appearance and higher price point"}
+    ]
+  },
+  "Leather (suede / nubuck)": {
+    cat:"Natural fiber",
+    chem:"High", osm:"Medium", env:"High",
+    chemNotes:"Suede (split leather) and nubuck (buffed top grain) are almost always chrome-tanned. The open, napped surface significantly increases chemical transfer compared to smooth finished leather. Dye and waterproofing spray usage is also high.",
+    osmNotes:"The unfinished, porous surface means higher skin contact with residual chemicals than smooth leather. Waterproofing sprays often contain PFAS ('forever chemicals'). Higher transfer risk than smooth chrome leather.",
+    envNotes:"Same livestock and tanning footprint as chrome leather. Open surface structure requires more intensive chemical processing and finishing to protect the material.",
+    warns:[
+      {level:"high", text:"Open porous surface means higher skin exposure to residual tanning chemicals than smooth leather"},
+      {level:"high", text:"Waterproofing sprays for suede commonly contain PFAS — avoid spray-on treatments"},
+      {level:"med", text:"Darker-dyed suede carries a higher dye residue transfer risk via sweat"},
+      {level:"med", text:"Avoid suede in footwear insoles — direct contact with sweat accelerates chemical transfer"}
     ]
   }
 };
@@ -1697,7 +1727,7 @@ function scoreToGrade(score) {
   if (score <= 1.3) return "A";
   if (score <= 1.7) return "B";
   if (score <= 2.2) return "C";
-  if (score <= 2.7) return "D";
+  if (score <= 2.6) return "D";
   return "F";
 }
 
