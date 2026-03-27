@@ -92,8 +92,8 @@ header span{font-family:var(--mono);font-size:11px;color:#888880;letter-spacing:
 .wish-card.is-favorite::before {
   content: '';
   position: absolute;
-  inset: -6px;
-  border-radius: 18px;
+  inset: -7px;
+  border-radius: 16px;
   background: linear-gradient(120deg, #ff0000, #ff8800, #ffff00, #00cc55, #0088ff, #cc00ff, #ff0000);
   background-size: 300% 300%;
   animation: rainbow-spin 3s linear infinite;
@@ -492,6 +492,13 @@ function openModal(id) {
           <span class="form-label">Fabric</span>
           <select class="form-select" id="f-rating" style="max-width:100px">${gradeOpts}</select>
         </div>
+        <div class="form-row">
+          <span class="form-label">Favorite</span>
+          <button type="button" id="f-fav-btn" onclick="toggleFavBtn()"
+            style="padding:6px 14px;border-radius:5px;font-family:var(--mono);font-size:12px;cursor:pointer;transition:all 0.2s;border:0.5px solid var(--border);background:var(--bg);color:var(--muted)">
+            ✦ Mark as favorite
+          </button>
+        </div>
         <div class="form-row" style="align-items:flex-start">
           <span class="form-label" style="margin-top:5px">Tags</span>
           <div style="flex:1">
@@ -511,7 +518,36 @@ function openModal(id) {
     </div>`;
 
   document.body.appendChild(overlay);
-  setTimeout(() => document.getElementById('f-name')?.focus(), 60);
+  setTimeout(() => {
+    document.getElementById('f-name')?.focus();
+    // Set initial favorite button state
+    if (w && String(w.favorite).toLowerCase() === 'true') setFavBtnActive(true);
+  }, 60);
+}
+
+function setFavBtnActive(active) {
+  const btn = document.getElementById('f-fav-btn');
+  if (!btn) return;
+  if (active) {
+    btn.textContent = '✦ Favorite (on)';
+    btn.style.background = 'linear-gradient(90deg,#ff6b6b,#ffa500,#ffd700,#6bff6b,#6bb5ff,#cc6bff)';
+    btn.style.color = '#fff';
+    btn.style.border = 'none';
+    btn.style.fontWeight = '500';
+    btn.dataset.fav = 'true';
+  } else {
+    btn.textContent = '✦ Mark as favorite';
+    btn.style.background = 'var(--bg)';
+    btn.style.color = 'var(--muted)';
+    btn.style.border = '0.5px solid var(--border)';
+    btn.style.fontWeight = '';
+    btn.dataset.fav = 'false';
+  }
+}
+
+function toggleFavBtn() {
+  const btn = document.getElementById('f-fav-btn');
+  setFavBtnActive(btn?.dataset.fav !== 'true');
 }
 
 function closeModal() {
@@ -578,10 +614,11 @@ async function saveModal(id) {
   const productUrl = document.getElementById('f-url').value.trim();
   const fabricRating = document.getElementById('f-rating').value.trim().toUpperCase();
   const tags = [...editingTags];
+  const favorite = document.getElementById('f-fav-btn')?.dataset.fav === 'true' ? 'True' : '';
 
   if (!name) { alert('Item name is required.'); return; }
 
-  const data = { name, price, imageUrl, category, productUrl, fabricRating, tags };
+  const data = { name, price, imageUrl, category, productUrl, fabricRating, tags, favorite };
 
   setStatus('Saving…', '');
   try {
